@@ -1,0 +1,61 @@
+---
+import CodexLayout from "../layouts/CodexLayout.astro";
+import SectionHead from "../components/SectionHead.astro";
+import WorldWheel from "../components/WorldWheel.astro";
+import BookCard from "../components/BookCard.astro";
+import { DOMAINS } from "../data/domains";
+import { withBase } from "../lib/url";
+import "../styles/home.css";
+
+const navLinks = [
+  { href: "#books", label: "The Eight Books" },
+  { href: "/arcana", label: "Arcana" },
+  { href: "/pattern", label: "The Pattern" },
+];
+---
+
+<CodexLayout title="Codex Terra — The Great Archive" navLinks={navLinks}>
+  <!-- HERO -->
+  <header class="hub-hero" id="top">
+    <WorldWheel />
+    <div class="eyebrow t-eyebrow">The Great Archive of a World</div>
+    <h1>Codex Terra<span class="amp">— the whole of the known world, kept in one hand —</span></h1>
+    <p class="tagline">
+      Eight books hold all that is remembered: its magic and its maps, its peoples and its powers,
+      its gods, its beasts, and the names that bent the age.
+    </p>
+    <div class="hub-cta">
+      <a class="btn btn-primary" href="#books">Open the Archive</a>
+      <a class="btn btn-ghost" href={withBase("/arcana")}>Begin with Magic</a>
+    </div>
+    <div class="scroll-cue">Enter<div class="ln"></div></div>
+  </header>
+
+  <!-- WORLD INTRO -->
+  <section class="intro">
+    <div class="wrap-narrow reveal">
+      <p class="lead">
+        <span class="drop">In an age</span> when the old powers are spent and the new ones not yet
+        named, what survives of a world is what is written down. This is that writing — gathered,
+        ordered, and kept against forgetting.
+      </p>
+      <div class="stats">
+        <div class="it reveal delay-1"><div class="n">VIII</div><div class="l">Books</div></div>
+        <div class="it reveal delay-2"><div class="n">XII</div><div class="l">Schools of Magic</div></div>
+        <div class="it reveal delay-3"><div class="n">∞</div><div class="l">Entries to Come</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE EIGHT BOOKS -->
+  <section class="books" id="books">
+    <SectionHead
+      roman="The Index of Terra"
+      title="The Eight Books"
+      sub="Each book is a domain of the world, kept by its own hand and bound in its own color. Enter where your curiosity leads."
+    />
+    <div class="book-grid">
+      {DOMAINS.map((book, i) => <BookCard book={book} delay={((i % 3) + 1) as 1 | 2 | 3} />)}
+    </div>
+  </section>
+</CodexLayout>

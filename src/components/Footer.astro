@@ -1,0 +1,28 @@
+---
+interface Props {
+  line1?: string;
+  line2?: string;
+  line3?: string;
+}
+
+const {
+  line1 = "Codex Terra · The Great Archive",
+  line2 = "Compiled against forgetting, that the world might be known by those who come after.",
+  line3 = "— Liber Mundi —",
+} = Astro.props;
+---
+
+<footer class="codex-foot">
+  <div class="sig">
+    <svg viewBox="0 0 80 80" fill="none" stroke="#c9a961" stroke-width="0.8" aria-hidden="true">
+      <circle cx="40" cy="40" r="32"></circle>
+      <circle cx="40" cy="40" r="22"></circle>
+      <polygon points="40,18 48,40 40,62 32,40"></polygon>
+      <polygon points="18,40 40,32 62,40 40,48"></polygon>
+      <circle cx="40" cy="40" r="3" fill="#c9a961"></circle>
+    </svg>
+  </div>
+  <div class="l1">{line1}</div>
+  <div class="l2">{line2}</div>
+  <div class="l3">{line3}</div>
+</footer>

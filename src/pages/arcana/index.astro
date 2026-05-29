@@ -1,0 +1,103 @@
+---
+import CodexLayout from "../../layouts/CodexLayout.astro";
+import SectionHead from "../../components/SectionHead.astro";
+import HeroSigil from "../../components/HeroSigil.astro";
+import TriadCard from "../../components/TriadCard.astro";
+import SchoolCard from "../../components/SchoolCard.astro";
+import Quiz from "../../components/Quiz.astro";
+import SigilSprite from "../../components/SigilSprite.astro";
+import { TRIADS, TRIAD_ORDER } from "../../data/triads";
+import { SCHOOLS } from "../../data/schools";
+import "../../styles/arcana.css";
+
+const navLinks = [
+  { href: "#triads", label: "The Triads" },
+  { href: "#schools", label: "The Twelve" },
+  { href: "#quiz", label: "Find Your School" },
+];
+---
+
+<CodexLayout
+  title="Codex Arcanum — The Twelve Schools of Magic"
+  description="The twelve schools and four triads of magic — and the Sorting Rite that names the school in which your aptitude lies."
+  domain="arcana"
+  brand="Codex·Arcanum"
+  navLinks={navLinks}
+>
+  <SigilSprite />
+
+  <!-- HERO -->
+  <header class="arcana-hero">
+    <HeroSigil />
+    <div class="eyebrow reveal delay-1">Anno Magisterii · MCDXXXVII</div>
+    <h1 class="reveal delay-2">
+      Codex<br />Arcanum
+      <span class="amp">— or, the twelve schools of magic —</span>
+    </h1>
+    <p class="tagline reveal delay-3">
+      All workings of the Art descend from twelve roots, twined into four sacred triads. Learn their
+      names. Find which whispers your own.
+    </p>
+    <div class="meta reveal delay-4">
+      <div><span class="num">IV</span>Triads</div>
+      <div><span class="num">XII</span>Schools</div>
+      <div><span class="num">∞</span>Workings</div>
+    </div>
+    <div class="scroll-cue">Descend<div class="line"></div></div>
+  </header>
+
+  <!-- TRIADS -->
+  <section class="codex" id="triads">
+    <SectionHead
+      roman="Liber Primus"
+      title="The Four Triads"
+      sub="Every working belongs to one of four great currents. Each triad gathers three kindred schools — sisters in essence, distinct in expression."
+    />
+    <div class="triads">
+      {TRIAD_ORDER.map((id, i) => <TriadCard triad={TRIADS[id]} delay={(i + 1) as 1 | 2 | 3 | 4} />)}
+    </div>
+  </section>
+
+  <!-- SCHOOLS -->
+  <section class="codex schools-section" id="schools">
+    <SectionHead
+      roman="Liber Secundus"
+      title="The Twelve Schools"
+      sub="Open any sigil to read the school's full entry — its definition, the workings it permits, and the words of the masters who shaped it."
+    />
+    {
+      TRIAD_ORDER.map((tid) => {
+        const triad = TRIADS[tid];
+        return (
+          <div class="triad-band reveal" id={`band-${tid}`}>
+            <div class="band-head">
+              <div class="num">Triad {triad.roman}</div>
+              <div class="nm">{triad.name}</div>
+              <div class="en">— {triad.en}</div>
+            </div>
+            <div class="school-grid">
+              {SCHOOLS.filter((s) => s.triad === tid).map((s) => (
+                <SchoolCard school={s} />
+              ))}
+            </div>
+          </div>
+        );
+      })
+    }
+  </section>
+
+  <!-- QUIZ -->
+  <section class="codex quiz-section" id="quiz">
+    <SectionHead
+      roman="Liber Tertius"
+      title="The Sorting Rite"
+      sub="Six questions, posed in the old manner. Answer honestly, and the Codex will name the school in which your aptitude lies."
+    />
+    <Quiz />
+  </section>
+
+  <!-- MODAL (shared, driven by the island) -->
+  <div class="modal-back" id="modal-back">
+    <div class="modal parchment" id="modal" role="dialog" aria-modal="true"></div>
+  </div>
+</CodexLayout>

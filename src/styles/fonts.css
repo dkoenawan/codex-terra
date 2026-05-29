@@ -1,0 +1,28 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   CODEX TERRA — self-hosted fonts (@fontsource)
+   Replaces the prototype's Google Fonts <link>. Weights mirror exactly what
+   the original requested:
+     Cinzel              400 / 500 / 600 / 700        (display, all-caps; no italic)
+     Cormorant Garamond  400 / 500 / 600  + italic 400 / 500
+     EB Garamond         400 / 500 / 600  + italic 400
+   Imported once, globally, from CodexLayout so the cascade is unchanged.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Cinzel — display / labels */
+@import "@fontsource/cinzel/400.css";
+@import "@fontsource/cinzel/500.css";
+@import "@fontsource/cinzel/600.css";
+@import "@fontsource/cinzel/700.css";
+
+/* Cormorant Garamond — italic flavour / sub-headings */
+@import "@fontsource/cormorant-garamond/400.css";
+@import "@fontsource/cormorant-garamond/500.css";
+@import "@fontsource/cormorant-garamond/600.css";
+@import "@fontsource/cormorant-garamond/400-italic.css";
+@import "@fontsource/cormorant-garamond/500-italic.css";
+
+/* EB Garamond — body */
+@import "@fontsource/eb-garamond/400.css";
+@import "@fontsource/eb-garamond/500.css";
+@import "@fontsource/eb-garamond/600.css";
+@import "@fontsource/eb-garamond/400-italic.css";

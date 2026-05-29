@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Codex Terra — The Great Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/codex.css" />
+<style>
+  /* ── HERO ───────────────────────────────────────────── */
+  .hub-hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 130px 20px 90px; overflow: hidden; }
+  .hub-hero::before { content:""; position:absolute; inset:0; pointer-events:none;
+    background-image: radial-gradient(circle at 50% 44%, rgba(201,169,97,0.10), transparent 42%), radial-gradient(circle at 50% 44%, rgba(20,33,58,0.55), transparent 72%); }
+  .world-wheel { position: relative; width: 380px; height: 380px; max-width: 86vw; display:flex; align-items:center; justify-content:center; margin-bottom: 28px; }
+  .world-wheel svg { position:absolute; inset:0; width:100%; height:100%; }
+  .hub-hero h1 { position: relative; font-size: clamp(48px, 9vw, 120px); color: var(--parchment); letter-spacing: 0.08em; line-height: 0.95; text-shadow: 0 2px 30px rgba(201,169,97,0.18); }
+  .hub-hero .amp { display:block; font-family: var(--f-script); font-style: italic; font-weight:400; font-size:0.34em; color: var(--gold-bright); letter-spacing:0.04em; margin-top: 20px; text-transform: lowercase; }
+  .hub-hero .tagline { position: relative; font-family: var(--f-script); font-style: italic; font-size: clamp(19px,2.2vw,26px); color: var(--parchment); opacity: 0.82; max-width: 640px; margin-top: 34px; }
+  .hub-hero .eyebrow { position:relative; display:inline-flex; align-items:center; gap:14px; margin-bottom:20px; }
+  .hub-hero .eyebrow::before, .hub-hero .eyebrow::after { content:""; width:46px; height:1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .hub-cta { position: relative; display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top: 46px; }
+  .scroll-cue { position:absolute; bottom:26px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:10px; font-family:var(--f-display); font-size:10px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); opacity:.7; }
+  .scroll-cue .ln { width:1px; height:36px; background:linear-gradient(180deg, var(--gold), transparent); animation: cue 2.4s ease-in-out infinite; }
+  @keyframes cue { 0%,100%{opacity:.3; transform:scaleY(.6);} 50%{opacity:1; transform:scaleY(1);} }
+
+  /* ── WORLD INTRO ────────────────────────────────────── */
+  .intro { padding: 110px 40px; position: relative; border-top: 1px solid var(--navy-line); background: var(--navy-deep); }
+  @media(max-width:760px){ .intro { padding: 72px 18px; } }
+  .intro .lead { font-family: var(--f-script); font-size: clamp(22px, 3vw, 34px); font-style: italic; line-height: 1.45; color: var(--parchment); text-align:center; max-width: 880px; margin: 0 auto; }
+  .intro .lead .drop { font-style: normal; font-family: var(--f-display); color: var(--gold-bright); }
+  .intro .stats { display:flex; gap:54px; flex-wrap:wrap; justify-content:center; margin-top: 56px; }
+  .intro .stats .it { text-align:center; }
+  .intro .stats .n { font-family: var(--f-display); font-size: 40px; font-weight:600; color: var(--gold); letter-spacing:.04em; }
+  .intro .stats .l { font-family: var(--f-display); font-size: 11px; letter-spacing:.3em; text-transform:uppercase; color: var(--parchment); opacity:.6; margin-top:6px; }
+
+  /* ── THE EIGHT BOOKS ────────────────────────────────── */
+  .books { padding: 120px 40px; }
+  @media(max-width:760px){ .books { padding: 80px 18px; } }
+  .book-grid { display:grid; grid-template-columns: repeat(4,1fr); gap: 18px; max-width: 1320px; margin: 0 auto; }
+  @media(max-width:1080px){ .book-grid { grid-template-columns: repeat(2,1fr); } }
+  @media(max-width:560px){ .book-grid { grid-template-columns: 1fr; } }
+
+  .book {
+    position: relative; display:flex; flex-direction:column; text-decoration:none;
+    min-height: 320px; padding: 30px 26px 26px; overflow:hidden;
+    background-color: var(--navy-rich);
+    background-image:
+      radial-gradient(ellipse at 70% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,0.02), transparent 30%);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    transition: transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s;
+  }
+  .book::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity:.8; }
+  .book:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--accent) 60%, transparent); box-shadow: 0 26px 50px rgba(0,0,0,0.5), inset 0 0 60px color-mix(in srgb, var(--accent) 8%, transparent); }
+  .book .crest { width: 66px; height: 66px; margin-bottom: 20px; }
+  .book .crest svg { width:100%; height:100%; }
+  .book .roman { font-family: var(--f-display); font-size: 10px; letter-spacing:.4em; color: var(--accent-bright); text-transform:uppercase; opacity:.8; }
+  .book .la { font-family: var(--f-display); font-size: 28px; letter-spacing:.05em; color: var(--parchment); margin-top: 6px; }
+  .book .en { font-family: var(--f-script); font-style:italic; font-size: 16px; color: var(--accent-bright); margin-top: 4px; }
+  .book .ds { font-size: 14.5px; color: var(--parchment); opacity:.72; margin-top: 14px; line-height:1.5; flex:1; }
+  .book .foot { margin-top: 18px; padding-top: 14px; border-top: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); display:flex; align-items:center; justify-content:space-between; }
+  .book .status { font-family: var(--f-display); font-size: 9px; letter-spacing:.26em; text-transform:uppercase; color: var(--parchment); opacity:.5; }
+  .book .enter { font-family: var(--f-display); font-size: 9px; letter-spacing:.3em; text-transform:uppercase; color: var(--accent-bright); display:inline-flex; gap:7px; align-items:center; opacity:0; transform: translateX(-4px); transition: opacity .35s, transform .35s; }
+  .book.live:hover .enter { opacity:1; transform:none; }
+  .book.soon { }
+  .book.soon .la, .book.soon .crest { opacity:.82; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="codex-nav">
+  <a class="brand" href="#top">Codex<span>·</span>Terra</a>
+  <div class="links">
+    <a href="#books">The Eight Books</a>
+    <a href="Codex Arcanum.html">Arcana</a>
+    <a href="Codex Terra — Design System.html">The Pattern</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hub-hero" id="top">
+  <div class="world-wheel">
+    <!-- outer ring: 8 domain markers -->
+    <svg viewBox="0 0 380 380" class="spin-slow" aria-hidden="true">
+      <circle cx="190" cy="190" r="178" fill="none" stroke="#c9a961" stroke-width="0.6" opacity="0.5"/>
+      <circle cx="190" cy="190" r="166" fill="none" stroke="#c9a961" stroke-width="0.4" opacity="0.4" stroke-dasharray="2 9"/>
+      <g transform="translate(190 190)" fill="#c9a961" opacity="0.9">
+        <g transform="rotate(0)"><circle cx="0" cy="-158" r="2.4"/></g>
+        <g transform="rotate(45)"><circle cx="0" cy="-158" r="2.4"/></g>
+        <g transform="rotate(90)"><circle cx="0" cy="-158" r="2.4"/></g>
+        <g transform="rotate(135)"><circle cx="0" cy="-158" r="2.4"/></g>
+        <g transform="rotate(180)"><circle cx="0" cy="-158" r="2.4"/></g>
+        <g transform="rotate(225)"><circle cx="0" cy="-158" r="2.4"/></g>
+        <g transform="rotate(270)"><circle cx="0" cy="-158" r="2.4"/></g>
+        <g transform="rotate(315)"><circle cx="0" cy="-158" r="2.4"/></g>
+      </g>
+    </svg>
+    <!-- inner ring -->
+    <svg viewBox="0 0 380 380" class="spin-rev" aria-hidden="true">
+      <circle cx="190" cy="190" r="124" fill="none" stroke="#c9a961" stroke-width="0.5" opacity="0.5"/>
+      <g transform="translate(190 190)" stroke="#c9a961" fill="#c9a961" opacity=".75">
+        <g transform="rotate(0)"><polygon points="0,-124 -6,-110 6,-110"/></g>
+        <g transform="rotate(90)"><polygon points="0,-124 -6,-110 6,-110"/></g>
+        <g transform="rotate(180)"><polygon points="0,-124 -6,-110 6,-110"/></g>
+        <g transform="rotate(270)"><polygon points="0,-124 -6,-110 6,-110"/></g>
+      </g>
+    </svg>
+    <!-- center compass rose / world emblem -->
+    <svg viewBox="0 0 380 380" aria-hidden="true">
+      <g transform="translate(190 190)" fill="none" stroke="#e3c178" stroke-width="0.8" opacity="0.95">
+        <circle r="76"/>
+        <circle r="54" opacity=".55"/>
+        <!-- compass star -->
+        <polygon points="0,-76 14,-14 0,0 -14,-14" fill="#c9a961" stroke="none" opacity=".9"/>
+        <polygon points="0,76 14,14 0,0 -14,14" fill="#8e7338" stroke="none" opacity=".8"/>
+        <polygon points="-76,0 -14,14 0,0 -14,-14" fill="#8e7338" stroke="none" opacity=".8"/>
+        <polygon points="76,0 14,14 0,0 14,-14" fill="#c9a961" stroke="none" opacity=".9"/>
+        <line x1="-54" y1="-54" x2="54" y2="54" opacity=".4"/>
+        <line x1="-54" y1="54" x2="54" y2="-54" opacity=".4"/>
+        <circle r="4" fill="#e3c178" stroke="none"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="eyebrow t-eyebrow">The Great Archive of a World</div>
+  <h1>Codex Terra<span class="amp">— the whole of the known world, kept in one hand —</span></h1>
+  <p class="tagline">Eight books hold all that is remembered: its magic and its maps, its peoples and its powers, its gods, its beasts, and the names that bent the age.</p>
+  <div class="hub-cta">
+    <a class="btn btn-primary" href="#books">Open the Archive</a>
+    <a class="btn btn-ghost" href="Codex Arcanum.html">Begin with Magic</a>
+  </div>
+
+  <div class="scroll-cue">Enter<div class="ln"></div></div>
+</header>
+
+<!-- WORLD INTRO -->
+<section class="intro">
+  <div class="wrap-narrow reveal">
+    <p class="lead"><span class="drop">In an age</span> when the old powers are spent and the new ones not yet named, what survives of a world is what is written down. This is that writing — gathered, ordered, and kept against forgetting.</p>
+    <div class="stats">
+      <div class="it reveal delay-1"><div class="n">VIII</div><div class="l">Books</div></div>
+      <div class="it reveal delay-2"><div class="n">XII</div><div class="l">Schools of Magic</div></div>
+      <div class="it reveal delay-3"><div class="n">∞</div><div class="l">Entries to Come</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE EIGHT BOOKS -->
+<section class="books" id="books">
+  <div class="section-head reveal">
+    <div class="roman">The Index of Terra</div>
+    <h2>The Eight Books</h2>
+    <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    <p class="sub">Each book is a domain of the world, kept by its own hand and bound in its own color. Enter where your curiosity leads.</p>
+  </div>
+
+  <div class="book-grid">
+    <!-- ARCANA (live) -->
+    <a class="book live reveal" data-domain="arcana" href="Codex Arcanum.html">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#b89ad6" stroke-width="1.3"><polygon points="32,7 55,20 55,44 32,57 9,44 9,20"/><polygon points="32,17 46,25 46,39 32,47 18,39 18,25" opacity=".55"/><circle cx="32" cy="32" r="4.5" fill="#b89ad6"/></svg></div>
+      <div class="roman">Liber I</div>
+      <div class="la">Arcana</div>
+      <div class="en">the workings of magic</div>
+      <div class="ds">The twelve schools and four triads — and the rite that names the school in which your own aptitude lies.</div>
+      <div class="foot"><span class="status">✦ Complete</span><span class="enter">Enter →</span></div>
+    </a>
+
+    <!-- TERRAE -->
+    <a class="book soon reveal delay-1" data-domain="terrae" href="#books">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#6cb6a4" stroke-width="1.3"><path d="M9,40 Q21,28 32,40 T55,40"/><path d="M9,48 Q21,36 32,48 T55,48"/><circle cx="32" cy="18" r="7"/><path d="M32,11 L32,4 M32,25 L32,30" opacity=".6"/></svg></div>
+      <div class="roman">Liber II</div>
+      <div class="la">Terrae</div>
+      <div class="en">realms &amp; geography</div>
+      <div class="ds">The lands of the world — its realms, cities, and wilds — drawn by a living map that the cartographer's engine conjures anew.</div>
+      <div class="foot"><span class="status">Next ✦ map engine</span><span class="enter">Soon</span></div>
+    </a>
+
+    <!-- GENTES -->
+    <a class="book soon reveal delay-2" data-domain="gentes" href="#books">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#e0a85f" stroke-width="1.3"><circle cx="32" cy="24" r="11"/><path d="M16,54 Q32,37 48,54"/></svg></div>
+      <div class="roman">Liber III</div>
+      <div class="la">Gentes</div>
+      <div class="en">the peoples</div>
+      <div class="ds">The races and cultures of Terra — their homelands, their tongues, their customs, and their long quarrels.</div>
+      <div class="foot"><span class="status">Planned</span><span class="enter">Soon</span></div>
+    </a>
+
+    <!-- ORDINES -->
+    <a class="book soon reveal delay-3" data-domain="ordines" href="#books">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#d46a5a" stroke-width="1.3"><path d="M32,7 L53,16 L53,37 Q53,51 32,58 Q11,51 11,37 L11,16 Z"/><path d="M23,30 L41,30 M32,21 L32,43"/></svg></div>
+      <div class="roman">Liber IV</div>
+      <div class="la">Ordines</div>
+      <div class="en">factions &amp; houses</div>
+      <div class="ds">The orders, houses, and powers that contend for the world — their banners, allegiances, and feuds.</div>
+      <div class="foot"><span class="status">Planned</span><span class="enter">Soon</span></div>
+    </a>
+
+    <!-- ANNALES -->
+    <a class="book soon reveal" data-domain="annales" href="#books">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#d4bc72" stroke-width="1.3"><circle cx="32" cy="32" r="23"/><path d="M32,12 L32,32 L47,41"/><circle cx="32" cy="32" r="2.5" fill="#d4bc72"/></svg></div>
+      <div class="roman">Liber V</div>
+      <div class="la">Annales</div>
+      <div class="en">history &amp; the ages</div>
+      <div class="ds">The chronicle of Terra from the first dawn — its epochs, its catastrophes, and the turning of its ages.</div>
+      <div class="foot"><span class="status">Planned</span><span class="enter">Soon</span></div>
+    </a>
+
+    <!-- DIVINITAS -->
+    <a class="book soon reveal delay-1" data-domain="divinitas" href="#books">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#9bbdcf" stroke-width="1.3"><circle cx="32" cy="32" r="11"/><path d="M32,5 L32,16 M32,48 L32,59 M5,32 L16,32 M48,32 L59,32 M14,14 L21,21 M43,43 L50,50 M14,50 L21,43 M43,21 L50,14"/><circle cx="32" cy="32" r="2.5" fill="#9bbdcf"/></svg></div>
+      <div class="roman">Liber VI</div>
+      <div class="la">Divinitas</div>
+      <div class="en">the pantheon</div>
+      <div class="ds">The gods and faiths of the world — the powers above and below, their rites, their bargains, their silences.</div>
+      <div class="foot"><span class="status">Planned</span><span class="enter">Soon</span></div>
+    </a>
+
+    <!-- BESTIARUM -->
+    <a class="book soon reveal delay-2" data-domain="bestiarum" href="#books">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#a3b04e" stroke-width="1.3"><path d="M14,42 Q14,20 32,20 Q50,20 50,42"/><circle cx="25" cy="35" r="2.6" fill="#a3b04e"/><circle cx="39" cy="35" r="2.6" fill="#a3b04e"/><path d="M22,48 L42,48 M16,24 L10,18 M48,24 L54,18"/></svg></div>
+      <div class="roman">Liber VII</div>
+      <div class="la">Bestiarum</div>
+      <div class="en">beasts &amp; monsters</div>
+      <div class="ds">The bestiary of Terra, fair and foul — the creatures of wood and deep, and the horrors best left unnamed.</div>
+      <div class="foot"><span class="status">Planned</span><span class="enter">Soon</span></div>
+    </a>
+
+    <!-- PERSONAE -->
+    <a class="book soon reveal delay-3" data-domain="personae" href="#books">
+      <div class="crest"><svg viewBox="0 0 64 64" fill="none" stroke="#969ed0" stroke-width="1.3"><circle cx="32" cy="23" r="11"/><path d="M15,53 Q32,36 49,53"/><path d="M24,11 L32,4 L40,11"/></svg></div>
+      <div class="roman">Liber VIII</div>
+      <div class="la">Personae</div>
+      <div class="en">notable figures</div>
+      <div class="ds">The persons who shaped the age — kings and traitors, archmages and fools, kept in full dossier.</div>
+      <div class="foot"><span class="status">Planned</span><span class="enter">Soon</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="codex-foot">
+  <div class="sig">
+    <svg viewBox="0 0 80 80" fill="none" stroke="#c9a961" stroke-width="0.8"><circle cx="40" cy="40" r="32"/><circle cx="40" cy="40" r="22"/><polygon points="40,18 48,40 40,62 32,40"/><polygon points="18,40 40,32 62,40 40,48"/><circle cx="40" cy="40" r="3" fill="#c9a961"/></svg>
+  </div>
+  <div class="l1">Codex Terra · The Great Archive</div>
+  <div class="l2">Compiled against forgetting, that the world might be known by those who come after.</div>
+  <div class="l3">— Liber Mundi —</div>
+</footer>
+
+<script src="assets/codex.js" defer></script>
+</body>
+</html>

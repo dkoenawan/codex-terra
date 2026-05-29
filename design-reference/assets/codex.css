@@ -1,0 +1,276 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   CODEX TERRA — Shared Design System
+   The single source of truth. Every page imports this file.
+   ─────────────────────────────────────────────────────────────────────
+   Sections:
+   1. Tokens (color, type, space, radius, shadow, motion)
+   2. Domain accent themes  [data-domain="…"]
+   3. Base + reset
+   4. Surfaces (.parchment, .vellum, ornaments)
+   5. Typography utilities
+   6. Chrome (nav, footer)
+   7. Section heads & rules
+   8. Cards (codex, sigil, dossier, heraldry)
+   9. Buttons, tags, badges
+   10. Reveal / motion
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. TOKENS ──────────────────────────────────────────────────────── */
+:root {
+  /* Stage (the dark chrome the whole world sits on) */
+  --navy:        #0d1626;
+  --navy-deep:   #07101e;
+  --navy-rich:   #14213a;
+  --navy-line:   rgba(201,169,97,0.18);
+
+  /* Page (parchment — where content lives) */
+  --parchment:        #e8d9b8;
+  --parchment-warm:   #ddc99e;
+  --parchment-shadow: #b9a679;
+  --vellum:           #f0e6cd;   /* lighter parchment for map/light surfaces */
+
+  /* Ink (text on parchment) */
+  --ink:       #2a2418;
+  --ink-soft:  #4a3f2a;
+  --ink-faint: #6d5f44;
+
+  /* Gold (universal wayfinding accent) */
+  --gold:        #c9a961;
+  --gold-bright: #e3c178;
+  --gold-deep:   #8e7338;
+
+  /* Universal signal */
+  --crimson: #6b1f24;
+
+  /* Default accent = gold (overridden per domain) */
+  --accent:        var(--gold);
+  --accent-bright: var(--gold-bright);
+  --accent-deep:   var(--gold-deep);
+  --accent-ink:    #6e5a2e;       /* accent legible on parchment */
+
+  /* Type */
+  --f-display: "Cinzel", serif;
+  --f-script:  "Cormorant Garamond", serif;
+  --f-body:    "EB Garamond", "Cormorant Garamond", serif;
+
+  /* Space scale */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 22px; --s-6: 30px; --s-7: 44px; --s-8: 64px; --s-9: 96px; --s-10: 120px;
+
+  /* Radius — the system is intentionally hard-cornered */
+  --r-sm: 2px;  --r-pill: 999px;
+
+  /* Shadow */
+  --shadow-card:  inset 0 0 60px rgba(120,90,40,0.35), inset 0 0 0 1px rgba(120,90,40,0.18);
+  --shadow-tight: inset 0 0 30px rgba(120,90,40,0.30), inset 0 0 0 1px rgba(120,90,40,0.18);
+  --shadow-lift:  0 24px 50px rgba(0,0,0,0.45);
+
+  /* Motion */
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+
+/* ── 2. DOMAIN ACCENT THEMES ────────────────────────────────────────────
+   "Jewel of the Domains" — the default accent set (Option A).
+   Add data-domain="…" to <body> (or any container) to theme it. */
+[data-domain="arcana"]    { --accent:#8a6db0; --accent-bright:#b89ad6; --accent-deep:#5a3f7a; --accent-ink:#5e4587; }
+[data-domain="terrae"]    { --accent:#3f8a7a; --accent-bright:#6cb6a4; --accent-deep:#2a5a4e; --accent-ink:#326b5e; }
+[data-domain="gentes"]    { --accent:#c0843f; --accent-bright:#e0a85f; --accent-deep:#8a5a28; --accent-ink:#8a5a28; }
+[data-domain="ordines"]   { --accent:#b04638; --accent-bright:#d46a5a; --accent-deep:#7a2a22; --accent-ink:#9a3528; }
+[data-domain="annales"]   { --accent:#b0974f; --accent-bright:#d4bc72; --accent-deep:#6e5830; --accent-ink:#7a6532; }
+[data-domain="divinitas"] { --accent:#6f93a8; --accent-bright:#9bbdcf; --accent-deep:#456676; --accent-ink:#3f6478; }
+[data-domain="bestiarum"] { --accent:#7d8a2e; --accent-bright:#a3b04e; --accent-deep:#525a1c; --accent-ink:#5a6422; }
+[data-domain="personae"]  { --accent:#6d77ad; --accent-bright:#969ed0; --accent-deep:#444c7a; --accent-ink:#4d568a; }
+
+/* ── 3. BASE / RESET ────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--navy);
+  color: var(--parchment);
+  font-family: var(--f-body);
+  font-size: 18px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(201,169,97,0.06), transparent 50%),
+    radial-gradient(ellipse at 80% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 55%);
+  background-attachment: fixed;
+}
+::selection { background: var(--gold); color: var(--navy-deep); }
+h1,h2,h3,h4,h5 { font-family: var(--f-display); font-weight: 500; letter-spacing: 0.04em; margin: 0; }
+p { margin: 0; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ── 4. SURFACES ────────────────────────────────────────────────────── */
+.parchment {
+  background-color: var(--parchment);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255,240,200,0.6), transparent 60%),
+    radial-gradient(ellipse at 75% 85%, rgba(140,110,60,0.25), transparent 60%),
+    radial-gradient(ellipse at 50% 50%, rgba(120,90,40,0.10), transparent 80%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.18  0 0 0 0 0.15  0 0 0 0 0.09  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+  background-blend-mode: multiply, multiply, normal, multiply;
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+}
+.parchment.tight { box-shadow: var(--shadow-tight); }
+
+/* lighter vellum — for maps & gallery surfaces that need detail to read */
+.vellum {
+  background-color: var(--vellum);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255,248,224,0.7), transparent 65%),
+    radial-gradient(ellipse at 80% 90%, rgba(150,120,70,0.18), transparent 60%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n2'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.20  0 0 0 0 0.16  0 0 0 0 0.10  0 0 0 0.22 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n2)' opacity='0.5'/></svg>");
+  background-blend-mode: multiply, multiply, normal;
+  color: var(--ink);
+  box-shadow: var(--shadow-tight);
+}
+
+/* corner ornaments — wrap content in .ornamented and drop 4 .frame-deco */
+.frame-deco { position: absolute; width: 36px; height: 36px; pointer-events: none; opacity: 0.7; }
+.frame-deco svg { width: 100%; height: 100%; }
+.frame-deco.tl { top: 10px; left: 10px; }
+.frame-deco.tr { top: 10px; right: 10px; transform: scaleX(-1); }
+.frame-deco.bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+.frame-deco.br { bottom: 10px; right: 10px; transform: scale(-1,-1); }
+
+/* ── 5. TYPOGRAPHY UTILITIES ────────────────────────────────────────── */
+.t-eyebrow  { font-family: var(--f-display); font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); }
+.t-label    { font-family: var(--f-display); font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; }
+.t-script   { font-family: var(--f-script); font-style: italic; }
+.t-roman    { font-family: var(--f-display); letter-spacing: 0.5em; text-transform: uppercase; }
+.ink        { color: var(--ink); }
+.ink-soft   { color: var(--ink-soft); }
+.accent     { color: var(--accent); }
+.accent-ink { color: var(--accent-ink); }
+
+/* ── 6. CHROME: NAV + FOOTER ────────────────────────────────────────── */
+.codex-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px;
+  background: linear-gradient(180deg, rgba(7,16,30,0.85) 0%, rgba(7,16,30,0) 100%);
+  backdrop-filter: blur(8px);
+  transition: background 0.3s, border-color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+.codex-nav.scrolled { background: rgba(7,16,30,0.92); border-bottom-color: var(--navy-line); }
+.codex-nav .brand { font-family: var(--f-display); font-size: 14px; letter-spacing: 0.32em; color: var(--gold); text-transform: uppercase; text-decoration: none; }
+.codex-nav .brand span { color: var(--parchment); opacity: 0.6; margin: 0 8px; }
+.codex-nav .links { display: flex; gap: 28px; }
+.codex-nav .links a { font-family: var(--f-display); font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--parchment); opacity: 0.7; text-decoration: none; transition: opacity .25s, color .25s; }
+.codex-nav .links a:hover, .codex-nav .links a.active { color: var(--accent-bright); opacity: 1; }
+@media (max-width: 760px){ .codex-nav { padding: 14px 18px; } .codex-nav .links { display: none; } }
+
+.codex-foot { padding: 70px 30px 50px; text-align: center; border-top: 1px solid var(--navy-line); background: var(--navy-deep); }
+.codex-foot .sig { width: 80px; height: 80px; margin: 0 auto 22px; opacity: 0.6; }
+.codex-foot .sig svg { width: 100%; height: 100%; }
+.codex-foot .l1 { font-family: var(--f-display); font-size: 11px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; }
+.codex-foot .l2 { font-family: var(--f-script); font-style: italic; font-size: 15px; color: var(--parchment); opacity: 0.55; margin-top: 12px; }
+.codex-foot .l3 { font-family: var(--f-display); font-size: 10px; letter-spacing: 0.36em; color: var(--gold-deep); text-transform: uppercase; margin-top: 30px; }
+
+/* ── 7. SECTIONS, HEADS & RULES ─────────────────────────────────────── */
+section.codex { padding: 120px 40px; position: relative; }
+@media (max-width: 760px){ section.codex { padding: 80px 18px; } }
+.wrap { max-width: 1280px; margin: 0 auto; }
+.wrap-narrow { max-width: 860px; margin: 0 auto; }
+
+.section-head { text-align: center; margin-bottom: 64px; }
+.section-head .roman { font-family: var(--f-display); font-size: 12px; letter-spacing: 0.5em; color: var(--accent); text-transform: uppercase; }
+.section-head h2 { font-size: clamp(32px, 4.5vw, 56px); margin-top: 14px; color: var(--parchment); }
+.section-head .sub { font-family: var(--f-script); font-style: italic; font-size: 19px; color: var(--parchment); opacity: 0.72; margin-top: 14px; max-width: 620px; margin-left: auto; margin-right: auto; }
+.rule { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 26px; }
+.rule .l { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent)); }
+.rule .r { width: 60px; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); }
+.rule .d { width: 6px; height: 6px; background: var(--accent); transform: rotate(45deg); }
+.rule-full { height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); border: 0; }
+
+/* ── 8. CARDS ───────────────────────────────────────────────────────── */
+/* generic codex card */
+.card {
+  position: relative; padding: 30px 26px 26px; overflow: hidden;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+.card.hoverable { cursor: pointer; }
+.card.hoverable:hover { transform: translateY(-4px); }
+.card.parchment.hoverable:hover { box-shadow: var(--shadow-card), var(--shadow-lift); }
+.card .kicker { font-family: var(--f-display); font-size: 11px; letter-spacing: 0.4em; color: var(--accent-ink); text-transform: uppercase; }
+.card .title  { font-family: var(--f-display); font-size: 24px; letter-spacing: 0.06em; color: var(--ink); margin-top: 10px; }
+.card .sub    { font-family: var(--f-script); font-style: italic; font-size: 16px; color: var(--ink-soft); margin-top: 4px; }
+.card .body   { font-size: 15px; color: var(--ink-soft); margin-top: 14px; line-height: 1.55; }
+.card .more   { font-family: var(--f-display); font-size: 10px; letter-spacing: 0.4em; color: var(--accent-ink); text-transform: uppercase; margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; }
+.card .more::after { content: "→"; transition: transform .3s; }
+.card.hoverable:hover .more::after { transform: translateX(4px); }
+
+/* sigil card (icon-led, like the schools) */
+.sigil-card .sigil { width: 64px; height: 64px; margin-bottom: 18px; }
+.sigil-card .sigil svg { width: 100%; height: 100%; }
+
+/* accent top-edge — a thin domain-colored seam */
+.card.seam::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* dossier — deep entry header block */
+.dossier-head { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+.dossier-head .crest { width: 120px; height: 120px; flex-shrink: 0; }
+.dossier-head .crest svg { width: 100%; height: 100%; }
+.dossier-head .meta { flex: 1; min-width: 240px; }
+.dossier-head .meta .kicker { font-family: var(--f-display); font-size: 11px; letter-spacing: 0.4em; color: var(--accent-ink); text-transform: uppercase; }
+.dossier-head .meta h1 { font-size: clamp(34px, 5vw, 56px); color: var(--ink); margin-top: 10px; line-height: 1.04; }
+.dossier-head .meta .epithet { font-family: var(--f-script); font-style: italic; font-size: 20px; color: var(--ink-soft); margin-top: 6px; }
+
+/* stat / field grid for dossiers */
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 1px; background: rgba(120,90,40,0.3); border: 1px solid rgba(120,90,40,0.3); }
+.fields .field { background: var(--parchment); padding: 16px 18px; }
+.fields .field .k { font-family: var(--f-display); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent-ink); }
+.fields .field .v { font-family: var(--f-script); font-size: 19px; color: var(--ink); margin-top: 4px; }
+
+/* ── 9. BUTTONS, TAGS, BADGES ───────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--f-display); font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+  padding: 14px 26px; cursor: pointer; text-decoration: none;
+  background: transparent; transition: background .25s, color .25s, border-color .25s, transform .25s;
+}
+.btn-primary { background: var(--accent); color: var(--navy-deep); border: 1px solid var(--accent); }
+.btn-primary:hover { background: var(--accent-bright); border-color: var(--accent-bright); transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(--gold); border: 1px solid var(--gold-deep); }
+.btn-ghost:hover { background: rgba(201,169,97,0.12); color: var(--gold-bright); }
+.btn-ink { color: var(--ink); border: 1px solid rgba(120,90,40,0.5); }
+.btn-ink:hover { background: rgba(120,90,40,0.1); }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--f-display); font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+  padding: 6px 12px; border: 1px solid var(--accent-deep); color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.tag.on-navy { color: var(--accent-bright); border-color: var(--accent-deep); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.badge-num { font-family: var(--f-display); font-weight: 600; font-size: 22px; letter-spacing: 0.04em; color: var(--parchment); }
+
+/* divider with center diamond */
+.div-orn { display: flex; align-items: center; gap: 12px; }
+.div-orn::before, .div-orn::after { content: ""; flex: 1; height: 1px; background: rgba(120,90,40,0.35); }
+.div-orn .d { width: 6px; height: 6px; background: var(--accent); transform: rotate(45deg); }
+
+/* ── 10. MOTION ─────────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s var(--ease); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.delay-1 { transition-delay: .08s; }
+.reveal.delay-2 { transition-delay: .16s; }
+.reveal.delay-3 { transition-delay: .24s; }
+.reveal.delay-4 { transition-delay: .32s; }
+.spin-slow { animation: spin-slow 90s linear infinite; }
+.spin-rev  { animation: spin-slow 60s linear infinite reverse; }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .spin-slow, .spin-rev { animation: none; }
+}

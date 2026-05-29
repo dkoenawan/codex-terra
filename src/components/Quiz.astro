@@ -1,0 +1,36 @@
+---
+import CornerOrnament from "./CornerOrnament.astro";
+import { QUIZ } from "../data/quiz";
+import { SCHOOLS } from "../data/schools";
+import { TRIADS } from "../data/triads";
+
+// Serialize the data the island needs into the DOM so the client script has it
+// without a second import graph. (Sigils come from a hidden SVG sprite below.)
+const quizData = JSON.stringify(QUIZ);
+const schoolData = JSON.stringify(
+  SCHOOLS.map((s) => ({
+    id: s.id,
+    name: s.name,
+    triad: s.triad,
+    role: s.role,
+    desc: s.desc,
+    flavour: s.flavour,
+  })),
+);
+const triadData = JSON.stringify(TRIADS);
+---
+
+<div class="quiz-frame parchment reveal" id="quiz-frame">
+  <CornerOrnament />
+  <div id="quiz-body"></div>
+</div>
+
+<!-- data payload for the island -->
+<script type="application/json" id="quiz-data" set:html={quizData} is:inline></script>
+<script type="application/json" id="school-data" set:html={schoolData} is:inline></script>
+<script type="application/json" id="triad-data" set:html={triadData} is:inline></script>
+
+<script>
+  import { mountQuiz } from "../scripts/quiz";
+  mountQuiz();
+</script>

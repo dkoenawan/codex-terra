@@ -1,0 +1,53 @@
+---
+// The Arcana hero's three-layer rotating sigil ring.
+// Outer ring: 12 Roman-numeral markers (spins 90s). Inner ring: 4 cardinal
+// triangles (reverse 60s). Centre: stationary twelve-pointed star.
+// Markup lifted verbatim from the prototype.
+const OUTER = [
+  [0, "I"], [30, "II"], [60, "III"], [90, "IV"], [120, "V"], [150, "VI"],
+  [180, "VII"], [210, "VIII"], [240, "IX"], [270, "X"], [300, "XI"], [330, "XII"],
+] as const;
+---
+
+<div class="hero-sigil reveal">
+  <svg viewBox="0 0 360 360" class="ring-outer" aria-hidden="true">
+    <circle cx="180" cy="180" r="170" fill="none" stroke="#c9a961" stroke-width="0.6" opacity="0.5"></circle>
+    <circle cx="180" cy="180" r="160" fill="none" stroke="#c9a961" stroke-width="0.4" opacity="0.4" stroke-dasharray="2 8"></circle>
+    <g fill="#c9a961" opacity="0.85">
+      <g transform="translate(180 180)">
+        {OUTER.map(([deg, label]) => (
+          <g transform={`rotate(${deg})`}>
+            <circle cx="0" cy="-150" r="2"></circle>
+            <text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">{label}</text>
+          </g>
+        ))}
+      </g>
+    </g>
+  </svg>
+  <svg viewBox="0 0 360 360" class="ring-inner" aria-hidden="true">
+    <circle cx="180" cy="180" r="115" fill="none" stroke="#c9a961" stroke-width="0.5" opacity="0.55"></circle>
+    <circle cx="180" cy="180" r="98" fill="none" stroke="#c9a961" stroke-width="0.3" opacity="0.4" stroke-dasharray="1 5"></circle>
+    <g stroke="#c9a961" stroke-width="0.8" fill="none" opacity="0.75">
+      <g transform="translate(180 180)">
+        <g transform="rotate(0)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"></polygon></g>
+        <g transform="rotate(90)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"></polygon></g>
+        <g transform="rotate(180)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"></polygon></g>
+        <g transform="rotate(270)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"></polygon></g>
+      </g>
+    </g>
+  </svg>
+  <svg viewBox="0 0 360 360" aria-hidden="true">
+    <g transform="translate(180 180)" fill="none" stroke="#e3c178" stroke-width="0.7" opacity="0.9">
+      <circle r="60"></circle>
+      <circle r="42" opacity="0.5"></circle>
+      <g>
+        <line x1="0" y1="-60" x2="0" y2="60"></line>
+        <line x1="-60" y1="0" x2="60" y2="0"></line>
+        <line x1="-42" y1="-42" x2="42" y2="42"></line>
+        <line x1="-42" y1="42" x2="42" y2="-42"></line>
+      </g>
+      <polygon points="0,-30 8,-8 30,0 8,8 0,30 -8,8 -30,0 -8,-8" stroke="#c9a961" stroke-width="0.6"></polygon>
+      <circle r="4" fill="#e3c178" stroke="none"></circle>
+    </g>
+  </svg>
+</div>

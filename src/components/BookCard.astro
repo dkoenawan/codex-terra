@@ -1,0 +1,32 @@
+---
+import type { Book } from "../data/types";
+import { CREST_STROKE } from "../data/domains";
+import { withBase } from "../lib/url";
+
+interface Props {
+  book: Book;
+  delay?: 1 | 2 | 3;
+}
+const { book, delay } = Astro.props;
+const stroke = CREST_STROKE[book.id] ?? "#c9a961";
+const live = book.status === "live";
+const href = book.href.startsWith("#") ? book.href : withBase(book.href);
+---
+
+<a
+  class:list={["book", book.status, "reveal", delay && `delay-${delay}`]}
+  data-domain={book.id}
+  href={href}
+>
+  <div class="crest">
+    <svg viewBox="0 0 64 64" fill="none" stroke={stroke} stroke-width="1.3" aria-hidden="true" set:html={book.crest}></svg>
+  </div>
+  <div class="roman">{book.roman}</div>
+  <div class="la">{book.latin}</div>
+  <div class="en" set:html={book.en}></div>
+  <div class="ds">{book.blurb}</div>
+  <div class="foot">
+    <span class="status">{book.footStatus}</span>
+    <span class="enter">{live ? "Enter →" : "Soon"}</span>
+  </div>
+</a>

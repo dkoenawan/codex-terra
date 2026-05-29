@@ -1,0 +1,40 @@
+---
+// The hub hero's three-layer rotating compass / world-emblem.
+// Outer: 8 domain markers (spin 90s). Inner: 4 triangles (reverse 60s).
+// Centre: stationary compass rose. Markup lifted verbatim from the prototype.
+const OUTER_DEG = [0, 45, 90, 135, 180, 225, 270, 315];
+---
+
+<div class="world-wheel">
+  <svg viewBox="0 0 380 380" class="spin-slow" aria-hidden="true">
+    <circle cx="190" cy="190" r="178" fill="none" stroke="#c9a961" stroke-width="0.6" opacity="0.5"></circle>
+    <circle cx="190" cy="190" r="166" fill="none" stroke="#c9a961" stroke-width="0.4" opacity="0.4" stroke-dasharray="2 9"></circle>
+    <g transform="translate(190 190)" fill="#c9a961" opacity="0.9">
+      {OUTER_DEG.map((deg) => (
+        <g transform={`rotate(${deg})`}><circle cx="0" cy="-158" r="2.4"></circle></g>
+      ))}
+    </g>
+  </svg>
+  <svg viewBox="0 0 380 380" class="spin-rev" aria-hidden="true">
+    <circle cx="190" cy="190" r="124" fill="none" stroke="#c9a961" stroke-width="0.5" opacity="0.5"></circle>
+    <g transform="translate(190 190)" stroke="#c9a961" fill="#c9a961" opacity=".75">
+      <g transform="rotate(0)"><polygon points="0,-124 -6,-110 6,-110"></polygon></g>
+      <g transform="rotate(90)"><polygon points="0,-124 -6,-110 6,-110"></polygon></g>
+      <g transform="rotate(180)"><polygon points="0,-124 -6,-110 6,-110"></polygon></g>
+      <g transform="rotate(270)"><polygon points="0,-124 -6,-110 6,-110"></polygon></g>
+    </g>
+  </svg>
+  <svg viewBox="0 0 380 380" aria-hidden="true">
+    <g transform="translate(190 190)" fill="none" stroke="#e3c178" stroke-width="0.8" opacity="0.95">
+      <circle r="76"></circle>
+      <circle r="54" opacity=".55"></circle>
+      <polygon points="0,-76 14,-14 0,0 -14,-14" fill="#c9a961" stroke="none" opacity=".9"></polygon>
+      <polygon points="0,76 14,14 0,0 -14,14" fill="#8e7338" stroke="none" opacity=".8"></polygon>
+      <polygon points="-76,0 -14,14 0,0 -14,-14" fill="#8e7338" stroke="none" opacity=".8"></polygon>
+      <polygon points="76,0 14,14 0,0 14,-14" fill="#c9a961" stroke="none" opacity=".9"></polygon>
+      <line x1="-54" y1="-54" x2="54" y2="54" opacity=".4"></line>
+      <line x1="-54" y1="54" x2="54" y2="-54" opacity=".4"></line>
+      <circle r="4" fill="#e3c178" stroke="none"></circle>
+    </g>
+  </svg>
+</div>

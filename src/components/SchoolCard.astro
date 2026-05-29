@@ -1,0 +1,19 @@
+---
+import type { School } from "../data/types";
+import Sigil from "./Sigil.astro";
+import CornerOrnament from "./CornerOrnament.astro";
+
+interface Props {
+  school: School;
+}
+const { school } = Astro.props;
+---
+
+<button class="school-card parchment tight" type="button" data-school={school.id}>
+  <CornerOrnament corners={["tl", "tr"]} />
+  <div class="sigil"><Sigil school={school.id} /></div>
+  <div class="nm">{school.name}</div>
+  <div class="role">{school.role}</div>
+  <div class="desc">{school.desc}</div>
+  <div class="more">Read entry</div>
+</button>

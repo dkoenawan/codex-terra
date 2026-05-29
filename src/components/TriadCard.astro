@@ -1,0 +1,35 @@
+---
+import type { Triad } from "../data/types";
+import CornerOrnament from "./CornerOrnament.astro";
+
+interface Props {
+  triad: Triad;
+  delay?: 1 | 2 | 3 | 4;
+}
+const { triad, delay } = Astro.props;
+
+// Faint background triad sigil (circle-in-circle + two opposing triangles).
+const triadSigil = `<svg viewBox="0 0 220 220" fill="none" stroke="#8e7338" stroke-width="1" aria-hidden="true">
+  <circle cx="110" cy="110" r="100"/>
+  <circle cx="110" cy="110" r="76"/>
+  <polygon points="110,30 175,140 45,140"/>
+  <polygon points="110,190 45,80 175,80" opacity="0.6"/>
+  <circle cx="110" cy="110" r="6" fill="#8e7338"/>
+</svg>`;
+---
+
+<button
+  type="button"
+  class:list={["triad-card", "parchment", "reveal", delay && `delay-${delay}`]}
+  data-band={triad.id}
+>
+  <CornerOrnament />
+  <div class="roman-num">Triad {triad.roman}</div>
+  <div class="name">{triad.name}</div>
+  <div class="en">{triad.en}</div>
+  <div class="blurb">{triad.blurb}</div>
+  <div class="schools">
+    {triad.schools.map((s) => <span>{s}</span>)}
+  </div>
+  <div class="sigil-bg" set:html={triadSigil}></div>
+</button>

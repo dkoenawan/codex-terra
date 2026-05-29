@@ -1,0 +1,17 @@
+---
+interface Props {
+  roman: string; // small caps kicker, e.g. "Liber Primus"
+  title: string;
+  sub?: string;
+  reveal?: boolean;
+}
+
+const { roman, title, sub, reveal = true } = Astro.props;
+---
+
+<div class:list={["section-head", reveal && "reveal"]}>
+  <div class="roman">{roman}</div>
+  <h2>{title}</h2>
+  <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+  {sub && <p class="sub">{sub}</p>}
+</div>

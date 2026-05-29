@@ -1,0 +1,19 @@
+---
+// Drops the gold filigree corner ornaments into a positioned (relative) parent.
+// The #corner-orn symbol is injected once per page by scripts/codex.ts.
+interface Props {
+  /** Which corners to render. Default: all four. ["tl","tr"] for cards with only top corners. */
+  corners?: ("tl" | "tr" | "bl" | "br")[];
+}
+const { corners = ["tl", "tr", "bl", "br"] } = Astro.props;
+---
+
+{
+  corners.map((c) => (
+    <div class={`frame-deco ${c}`}>
+      <svg aria-hidden="true">
+        <use href="#corner-orn" />
+      </svg>
+    </div>
+  ))
+}

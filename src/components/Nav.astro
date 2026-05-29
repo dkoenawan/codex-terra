@@ -1,0 +1,32 @@
+---
+import { withBase } from "../lib/url";
+
+interface NavLink {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  brand?: string;
+  links?: NavLink[];
+}
+
+const { brand = "Codex·Terra", links = [] } = Astro.props;
+// Split the brand on the middot so the separator can be styled like the prototype.
+const [brandLeft, brandRight] = brand.split("·");
+---
+
+<nav class="codex-nav">
+  <a class="brand" href={withBase("/")}
+    >{brandLeft}{brandRight ? <span>·</span> : null}{brandRight}</a
+  >
+  {
+    links.length > 0 && (
+      <div class="links">
+        {links.map((l) => (
+          <a href={l.href.startsWith("#") ? l.href : withBase(l.href)}>{l.label}</a>
+        ))}
+      </div>
+    )
+  }
+</nav>

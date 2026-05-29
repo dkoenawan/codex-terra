@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Codex Arcanum — The Twelve Schools of Magic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy: #0d1626;
+    --navy-deep: #07101e;
+    --navy-rich: #14213a;
+    --parchment: #e8d9b8;
+    --parchment-warm: #d8c79a;
+    --parchment-shadow: #b9a679;
+    --ink: #2a2418;
+    --ink-soft: #4a3f2a;
+    --gold: #c9a961;
+    --gold-bright: #e3c178;
+    --gold-deep: #8e7338;
+    --crimson: #6b1f24;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--navy);
+    color: var(--parchment);
+    font-family: "EB Garamond", "Cormorant Garamond", serif;
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(201,169,97,0.06), transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(107,31,36,0.10), transparent 50%);
+    background-attachment: fixed;
+  }
+
+  ::selection { background: var(--gold); color: var(--navy-deep); }
+
+  h1,h2,h3,h4 { font-family: "Cinzel", serif; font-weight: 500; letter-spacing: 0.04em; margin: 0; }
+  p { margin: 0; }
+
+  /* ───────────────── parchment texture (reused as bg-image) ───────────────── */
+  .parchment {
+    background-color: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at 30% 20%, rgba(255,240,200,0.6), transparent 60%),
+      radial-gradient(ellipse at 75% 85%, rgba(140,110,60,0.25), transparent 60%),
+      radial-gradient(ellipse at 50% 50%, rgba(120,90,40,0.10), transparent 80%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.18  0 0 0 0 0.15  0 0 0 0 0.09  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+    background-blend-mode: multiply, multiply, normal, multiply;
+    color: var(--ink);
+    box-shadow:
+      inset 0 0 60px rgba(120, 90, 40, 0.35),
+      inset 0 0 0 1px rgba(120, 90, 40, 0.18);
+  }
+  .parchment.tight { box-shadow: inset 0 0 30px rgba(120,90,40,0.30), inset 0 0 0 1px rgba(120,90,40,0.18); }
+
+  /* ───────────────── frame & corner ornaments ───────────────── */
+  .frame-deco { position: absolute; width: 36px; height: 36px; pointer-events: none; opacity: 0.7; }
+  .frame-deco svg { width: 100%; height: 100%; }
+  .frame-deco.tl { top: 10px; left: 10px; }
+  .frame-deco.tr { top: 10px; right: 10px; transform: scaleX(-1); }
+  .frame-deco.bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+  .frame-deco.br { bottom: 10px; right: 10px; transform: scale(-1, -1); }
+
+  /* ───────────────── nav ───────────────── */
+  .codex-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    background: linear-gradient(180deg, rgba(7,16,30,0.85) 0%, rgba(7,16,30,0) 100%);
+    backdrop-filter: blur(8px);
+    transition: background 0.3s;
+  }
+  .codex-nav .brand {
+    font-family: "Cinzel", serif; font-size: 14px; letter-spacing: 0.32em;
+    color: var(--gold); text-transform: uppercase;
+  }
+  .codex-nav .brand span { color: var(--parchment); opacity: 0.6; margin: 0 8px; }
+  .codex-nav .links { display: flex; gap: 28px; font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; }
+  .codex-nav .links a { color: var(--parchment); opacity: 0.7; text-decoration: none; transition: opacity 0.25s, color 0.25s; }
+  .codex-nav .links a:hover { color: var(--gold-bright); opacity: 1; }
+  @media (max-width: 720px) { .codex-nav { padding: 14px 18px; } .codex-nav .links { display: none; } }
+
+  /* ───────────────── hero ───────────────── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 20px 80px;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 50% 45%, rgba(201,169,97,0.10), transparent 40%),
+      radial-gradient(circle at 50% 45%, rgba(20,33,58,0.6), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-sigil {
+    position: relative;
+    width: 360px; height: 360px;
+    margin-bottom: 30px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-sigil svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ring-outer { animation: spin-slow 90s linear infinite; }
+  .ring-inner { animation: spin-slow 60s linear infinite reverse; }
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+  .hero .eyebrow {
+    font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 0.45em;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 18px;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .hero .eyebrow::before, .hero .eyebrow::after {
+    content: ""; width: 40px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .hero h1 {
+    font-size: clamp(40px, 7.2vw, 96px); line-height: 1.0;
+    color: var(--parchment); letter-spacing: 0.06em;
+    text-shadow: 0 2px 20px rgba(201,169,97,0.18);
+  }
+  .hero h1 .amp {
+    display: block; font-family: "Cormorant Garamond", serif;
+    font-style: italic; font-weight: 400; letter-spacing: 0.02em;
+    color: var(--gold-bright); font-size: 0.55em; margin-top: 18px;
+    text-transform: lowercase;
+  }
+  .hero .tagline {
+    margin-top: 36px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(18px, 2vw, 24px);
+    font-style: italic; color: var(--parchment); opacity: 0.78;
+    max-width: 620px;
+  }
+  .hero .meta {
+    margin-top: 60px; display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;
+    font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.32em;
+    color: var(--gold); text-transform: uppercase;
+  }
+  .hero .meta div { display: flex; align-items: center; gap: 10px; }
+  .hero .meta .num { color: var(--parchment); font-size: 22px; letter-spacing: 0.04em; font-weight: 600; }
+
+  .scroll-cue {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    font-family: "Cinzel", serif; font-size: 10px; letter-spacing: 0.4em;
+    color: var(--gold); text-transform: uppercase; opacity: 0.7;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .scroll-cue .line { width: 1px; height: 36px; background: linear-gradient(180deg, var(--gold), transparent); animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.6); } 50% { opacity: 1; transform: scaleY(1); } }
+
+  /* ───────────────── section base ───────────────── */
+  section.codex { padding: 120px 40px; position: relative; }
+  @media (max-width: 720px) { section.codex { padding: 80px 18px; } }
+
+  .section-head { text-align: center; margin-bottom: 64px; }
+  .section-head .roman { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 0.5em; color: var(--gold); text-transform: uppercase; }
+  .section-head h2 { font-size: clamp(32px, 4.5vw, 56px); margin-top: 14px; color: var(--parchment); }
+  .section-head .sub { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 19px; color: var(--parchment); opacity: 0.72; margin-top: 14px; max-width: 620px; margin-left: auto; margin-right: auto; }
+  .section-head .rule { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 26px; }
+  .section-head .rule .l { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .section-head .rule .r { width: 60px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+  .section-head .rule .d { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); }
+
+  /* ───────────────── reveal on scroll ───────────────── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.delay-1 { transition-delay: 0.08s; }
+  .reveal.delay-2 { transition-delay: 0.16s; }
+  .reveal.delay-3 { transition-delay: 0.24s; }
+  .reveal.delay-4 { transition-delay: 0.32s; }
+
+  /* ───────────────── triads ───────────────── */
+  .triads { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  @media (max-width: 980px) { .triads { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px) { .triads { grid-template-columns: 1fr; } }
+
+  .triad-card {
+    position: relative;
+    padding: 36px 28px 30px;
+    border-radius: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    min-height: 360px;
+    display: flex; flex-direction: column;
+    transition: transform 0.45s ease, box-shadow 0.45s ease;
+  }
+  .triad-card:hover { transform: translateY(-4px); }
+  .triad-card:hover.parchment { box-shadow: inset 0 0 40px rgba(120,90,40,0.40), inset 0 0 0 1px rgba(120,90,40,0.30), 0 24px 50px rgba(0,0,0,0.45); }
+  .triad-card .roman-num { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.4em; color: var(--gold-deep); text-transform: uppercase; }
+  .triad-card .name { font-family: "Cinzel", serif; font-size: 30px; letter-spacing: 0.06em; margin-top: 12px; color: var(--ink); }
+  .triad-card .en { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 16px; color: var(--ink-soft); margin-top: 4px; }
+  .triad-card .blurb { font-size: 15.5px; color: var(--ink-soft); margin-top: 20px; flex: 1; }
+  .triad-card .schools { margin-top: 22px; padding-top: 18px; border-top: 1px dashed rgba(120,90,40,0.4); display: flex; flex-direction: column; gap: 6px; }
+  .triad-card .schools span { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.28em; color: var(--ink); text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+  .triad-card .schools span::before { content: "✦"; color: var(--gold-deep); font-size: 9px; }
+  .triad-card .sigil-bg { position: absolute; right: -30px; bottom: -30px; width: 220px; height: 220px; opacity: 0.07; }
+  .triad-card .sigil-bg svg { width: 100%; height: 100%; }
+
+  /* ───────────────── schools grid ───────────────── */
+  .schools-section { background: var(--navy-deep); }
+  .schools-section::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  }
+  .schools-section::after {
+    content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  }
+
+  .triad-band { max-width: 1280px; margin: 0 auto 80px; }
+  .triad-band:last-child { margin-bottom: 0; }
+  .triad-band .band-head { display: flex; align-items: baseline; gap: 18px; padding-bottom: 14px; margin-bottom: 30px; border-bottom: 1px solid rgba(201,169,97,0.25); }
+  .triad-band .band-head .num { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 0.4em; color: var(--gold); }
+  .triad-band .band-head .nm { font-family: "Cinzel", serif; font-size: 22px; letter-spacing: 0.12em; color: var(--parchment); text-transform: uppercase; }
+  .triad-band .band-head .en { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 16px; color: var(--parchment); opacity: 0.6; }
+
+  .school-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 900px) { .school-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .school-grid { grid-template-columns: 1fr; } }
+
+  .school-card {
+    position: relative;
+    padding: 30px 26px 26px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    min-height: 260px;
+    display: flex; flex-direction: column;
+  }
+  .school-card:hover { transform: translateY(-4px); }
+  .school-card:hover.parchment { box-shadow: inset 0 0 35px rgba(120,90,40,0.40), inset 0 0 0 1px var(--gold-deep), 0 20px 40px rgba(0,0,0,0.5); }
+  .school-card .sigil { width: 64px; height: 64px; margin-bottom: 18px; }
+  .school-card .sigil svg { width: 100%; height: 100%; }
+  .school-card .nm { font-family: "Cinzel", serif; font-size: 22px; letter-spacing: 0.08em; color: var(--ink); }
+  .school-card .role { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 15px; color: var(--ink-soft); margin-top: 4px; }
+  .school-card .desc { font-size: 15px; line-height: 1.55; color: var(--ink-soft); margin-top: 14px; flex: 1; }
+  .school-card .more { font-family: "Cinzel", serif; font-size: 10px; letter-spacing: 0.4em; color: var(--gold-deep); text-transform: uppercase; margin-top: 18px; display: flex; align-items: center; gap: 8px; }
+  .school-card .more::after { content: "→"; transition: transform 0.3s; }
+  .school-card:hover .more::after { transform: translateX(4px); }
+
+  /* ───────────────── modal ───────────────── */
+  .modal-back {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(7,16,30,0.85);
+    backdrop-filter: blur(10px);
+    display: none; align-items: center; justify-content: center;
+    padding: 30px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .modal-back.open { display: flex; opacity: 1; }
+  .modal {
+    position: relative;
+    max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto;
+    padding: 60px 50px 50px;
+    transform: scale(0.96);
+    transition: transform 0.4s cubic-bezier(.2,.7,.2,1);
+  }
+  .modal-back.open .modal { transform: scale(1); }
+  .modal .close {
+    position: absolute; top: 18px; right: 20px;
+    width: 36px; height: 36px;
+    background: transparent; border: 1px solid var(--gold-deep); color: var(--ink);
+    border-radius: 50%; cursor: pointer;
+    font-family: serif; font-size: 16px;
+    transition: background 0.25s;
+  }
+  .modal .close:hover { background: var(--gold); color: var(--navy-deep); }
+  .modal .triad-tag { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.4em; color: var(--gold-deep); text-transform: uppercase; }
+  .modal .nm { font-family: "Cinzel", serif; font-size: 44px; letter-spacing: 0.04em; color: var(--ink); margin-top: 12px; line-height: 1.05; }
+  .modal .role { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 20px; color: var(--ink-soft); margin-top: 8px; }
+  .modal .sigil-row { display: flex; align-items: center; gap: 24px; margin: 32px 0 28px; padding: 24px 0; border-top: 1px dashed rgba(120,90,40,0.4); border-bottom: 1px dashed rgba(120,90,40,0.4); }
+  .modal .sigil-row .sg { width: 80px; height: 80px; flex-shrink: 0; }
+  .modal .sigil-row .sg svg { width: 100%; height: 100%; }
+  .modal .sigil-row .pl { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 16px; color: var(--ink-soft); }
+  .modal .sigil-row .pl strong { font-style: normal; font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.32em; color: var(--ink); text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .modal h4 { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 0.36em; color: var(--gold-deep); text-transform: uppercase; margin-top: 26px; margin-bottom: 10px; }
+  .modal p { font-size: 17px; line-height: 1.7; color: var(--ink); }
+  .modal .flavour { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 19px; line-height: 1.65; color: var(--ink-soft); border-left: 2px solid var(--gold-deep); padding-left: 18px; margin-top: 12px; }
+  @media (max-width: 560px) {
+    .modal { padding: 50px 26px 30px; }
+    .modal .nm { font-size: 32px; }
+  }
+
+  /* ───────────────── quiz ───────────────── */
+  .quiz-section { padding: 120px 20px; position: relative; }
+  .quiz-section::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(ellipse at 50% 30%, rgba(201,169,97,0.07), transparent 60%);
+    pointer-events: none;
+  }
+  .quiz-frame {
+    max-width: 760px; margin: 0 auto;
+    padding: 60px 52px 50px;
+    position: relative;
+    min-height: 540px;
+  }
+  @media (max-width: 600px) { .quiz-frame { padding: 50px 24px 36px; min-height: 600px; } }
+
+  .quiz-progress { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .quiz-progress .step { width: 28px; height: 2px; background: rgba(120,90,40,0.3); transition: background 0.4s; }
+  .quiz-progress .step.done { background: var(--gold-deep); }
+  .quiz-progress .step.curr { background: var(--ink); }
+  .quiz-counter { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.4em; color: var(--gold-deep); text-transform: uppercase; margin-bottom: 28px; }
+
+  .quiz-question { font-family: "Cormorant Garamond", serif; font-weight: 500; font-size: 30px; line-height: 1.3; color: var(--ink); margin-bottom: 28px; }
+  @media (max-width: 600px) { .quiz-question { font-size: 24px; } }
+
+  .quiz-answers { display: flex; flex-direction: column; gap: 12px; }
+  .quiz-answer {
+    text-align: left;
+    padding: 18px 22px;
+    background: rgba(232, 217, 184, 0.0);
+    border: 1px solid rgba(120,90,40,0.35);
+    cursor: pointer;
+    font-family: "EB Garamond", serif; font-size: 17px; color: var(--ink);
+    transition: background 0.25s, transform 0.25s, border-color 0.25s;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .quiz-answer .marker { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.3em; color: var(--gold-deep); flex-shrink: 0; }
+  .quiz-answer:hover { background: rgba(120,90,40,0.10); border-color: var(--gold-deep); transform: translateX(4px); }
+
+  .quiz-nav { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 22px; border-top: 1px dashed rgba(120,90,40,0.4); }
+  .quiz-nav button {
+    background: transparent; border: none; cursor: pointer;
+    font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.36em; text-transform: uppercase;
+    color: var(--ink-soft); padding: 8px 0;
+    transition: color 0.25s;
+  }
+  .quiz-nav button:hover { color: var(--ink); }
+  .quiz-nav button:disabled { opacity: 0.3; cursor: default; }
+  .quiz-nav .restart { color: var(--gold-deep); }
+
+  .quiz-stage { animation: fade-in 0.5s ease; }
+  @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* result */
+  .result-stage { text-align: center; }
+  .result-stage .pre { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.4em; color: var(--gold-deep); text-transform: uppercase; }
+  .result-stage .sigil { width: 100px; height: 100px; margin: 20px auto 14px; }
+  .result-stage .sigil svg { width: 100%; height: 100%; }
+  .result-stage .nm { font-family: "Cinzel", serif; font-size: 46px; letter-spacing: 0.04em; color: var(--ink); margin-top: 8px; }
+  .result-stage .triad { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 18px; color: var(--ink-soft); margin-top: 6px; }
+  .result-stage .blurb { font-size: 17px; line-height: 1.7; color: var(--ink); margin-top: 22px; max-width: 540px; margin-left: auto; margin-right: auto; }
+  .result-stage .flavour { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 19px; color: var(--ink-soft); margin-top: 18px; max-width: 540px; margin-left: auto; margin-right: auto; }
+  .result-stage .alt { font-family: "Cormorant Garamond", serif; font-size: 15px; color: var(--ink-soft); margin-top: 28px; padding-top: 22px; border-top: 1px dashed rgba(120,90,40,0.4); }
+  .result-stage .alt strong { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: 0.28em; color: var(--ink); text-transform: uppercase; }
+
+  /* ───────────────── footer ───────────────── */
+  footer.codex-foot {
+    padding: 70px 30px 50px;
+    text-align: center;
+    border-top: 1px solid rgba(201,169,97,0.18);
+    background: var(--navy-deep);
+  }
+  footer.codex-foot .sig { width: 80px; height: 80px; margin: 0 auto 22px; opacity: 0.6; }
+  footer.codex-foot .sig svg { width: 100%; height: 100%; }
+  footer.codex-foot .line1 { font-family: "Cinzel", serif; font-size: 11px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; }
+  footer.codex-foot .line2 { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 15px; color: var(--parchment); opacity: 0.55; margin-top: 12px; }
+  footer.codex-foot .line3 { font-family: "Cinzel", serif; font-size: 10px; letter-spacing: 0.36em; color: var(--gold-deep); text-transform: uppercase; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav class="codex-nav">
+  <div class="brand">Codex<span>·</span>Arcanum</div>
+  <div class="links">
+    <a href="#triads">The Triads</a>
+    <a href="#schools">The Twelve</a>
+    <a href="#quiz">Find Your School</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<header class="hero">
+  <div class="hero-sigil reveal">
+    <svg viewBox="0 0 360 360" class="ring-outer" aria-hidden="true">
+      <circle cx="180" cy="180" r="170" fill="none" stroke="#c9a961" stroke-width="0.6" opacity="0.5"/>
+      <circle cx="180" cy="180" r="160" fill="none" stroke="#c9a961" stroke-width="0.4" opacity="0.4" stroke-dasharray="2 8"/>
+      <g fill="#c9a961" opacity="0.85">
+        <!-- 12 sigil glyphs around outer ring -->
+        <g transform="translate(180 180)">
+          <!-- 12 dot+roman markers, evenly spaced -->
+          <g transform="rotate(0)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">I</text></g>
+          <g transform="rotate(30)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">II</text></g>
+          <g transform="rotate(60)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">III</text></g>
+          <g transform="rotate(90)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">IV</text></g>
+          <g transform="rotate(120)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">V</text></g>
+          <g transform="rotate(150)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">VI</text></g>
+          <g transform="rotate(180)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">VII</text></g>
+          <g transform="rotate(210)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">VIII</text></g>
+          <g transform="rotate(240)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">IX</text></g>
+          <g transform="rotate(270)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">X</text></g>
+          <g transform="rotate(300)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">XI</text></g>
+          <g transform="rotate(330)"><circle cx="0" cy="-150" r="2"/><text x="0" y="-138" text-anchor="middle" font-family="Cinzel" font-size="9" letter-spacing="2">XII</text></g>
+        </g>
+      </g>
+    </svg>
+    <svg viewBox="0 0 360 360" class="ring-inner" aria-hidden="true">
+      <circle cx="180" cy="180" r="115" fill="none" stroke="#c9a961" stroke-width="0.5" opacity="0.55"/>
+      <circle cx="180" cy="180" r="98" fill="none" stroke="#c9a961" stroke-width="0.3" opacity="0.4" stroke-dasharray="1 5"/>
+      <!-- 4 triad markers (cardinal) -->
+      <g stroke="#c9a961" stroke-width="0.8" fill="none" opacity="0.75">
+        <g transform="translate(180 180)">
+          <g transform="rotate(0)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"/></g>
+          <g transform="rotate(90)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"/></g>
+          <g transform="rotate(180)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"/></g>
+          <g transform="rotate(270)"><polygon points="0,-115 -7,-100 7,-100" fill="#c9a961"/></g>
+        </g>
+      </g>
+    </svg>
+    <svg viewBox="0 0 360 360" aria-hidden="true">
+      <!-- central twelve-pointed star -->
+      <g transform="translate(180 180)" fill="none" stroke="#e3c178" stroke-width="0.7" opacity="0.9">
+        <circle r="60"/>
+        <circle r="42" opacity="0.5"/>
+        <g>
+          <line x1="0" y1="-60" x2="0" y2="60"/>
+          <line x1="-60" y1="0" x2="60" y2="0"/>
+          <line x1="-42" y1="-42" x2="42" y2="42"/>
+          <line x1="-42" y1="42" x2="42" y2="-42"/>
+        </g>
+        <polygon points="0,-30 8,-8 30,0 8,8 0,30 -8,8 -30,0 -8,-8" stroke="#c9a961" stroke-width="0.6"/>
+        <circle r="4" fill="#e3c178" stroke="none"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="eyebrow reveal delay-1">Anno Magisterii · MCDXXXVII</div>
+  <h1 class="reveal delay-2">
+    Codex<br/>Arcanum
+    <span class="amp">— or, the twelve schools of magic —</span>
+  </h1>
+  <p class="tagline reveal delay-3">
+    All workings of the Art descend from twelve roots, twined into four sacred triads.
+    Learn their names. Find which whispers your own.
+  </p>
+  <div class="meta reveal delay-4">
+    <div><span class="num">IV</span>Triads</div>
+    <div><span class="num">XII</span>Schools</div>
+    <div><span class="num">∞</span>Workings</div>
+  </div>
+
+  <div class="scroll-cue">
+    Descend
+    <div class="line"></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════ TRIADS ═══════════════════════ -->
+<section class="codex" id="triads">
+  <div class="section-head reveal">
+    <div class="roman">Liber Primus</div>
+    <h2>The Four Triads</h2>
+    <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    <p class="sub">Every working belongs to one of four great currents. Each triad gathers three kindred schools — sisters in essence, distinct in expression.</p>
+  </div>
+
+  <div class="triads"></div>
+</section>
+
+<!-- ═══════════════════════ SCHOOLS ═══════════════════════ -->
+<section class="codex schools-section" id="schools">
+  <div class="section-head reveal">
+    <div class="roman">Liber Secundus</div>
+    <h2>The Twelve Schools</h2>
+    <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    <p class="sub">Open any sigil to read the school's full entry — its definition, the workings it permits, and the words of the masters who shaped it.</p>
+  </div>
+  <div id="schools-container"></div>
+</section>
+
+<!-- ═══════════════════════ QUIZ ═══════════════════════ -->
+<section class="codex quiz-section" id="quiz">
+  <div class="section-head reveal">
+    <div class="roman">Liber Tertius</div>
+    <h2>The Sorting Rite</h2>
+    <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    <p class="sub">Six questions, posed in the old manner. Answer honestly, and the Codex will name the school in which your aptitude lies.</p>
+  </div>
+
+  <div class="quiz-frame parchment reveal" id="quiz-frame">
+    <div class="frame-deco tl"></div>
+    <div class="frame-deco tr"></div>
+    <div class="frame-deco bl"></div>
+    <div class="frame-deco br"></div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="codex-foot">
+  <div class="sig">
+    <svg viewBox="0 0 80 80" fill="none" stroke="#c9a961" stroke-width="0.8">
+      <circle cx="40" cy="40" r="32"/>
+      <circle cx="40" cy="40" r="22"/>
+      <polygon points="40,18 48,40 40,62 32,40"/>
+      <polygon points="18,40 40,32 62,40 40,48"/>
+      <circle cx="40" cy="40" r="3" fill="#c9a961"/>
+    </svg>
+  </div>
+  <div class="line1">Codex Arcanum · Sigillum Magisterii</div>
+  <div class="line2">Compiled by the Hand of the Twelve, that the Art might not be lost.</div>
+  <div class="line3">— Finis —</div>
+</footer>
+
+<!-- ═══════════════════════ MODAL ═══════════════════════ -->
+<div class="modal-back" id="modal-back">
+  <div class="modal parchment" id="modal"></div>
+</div>
+
+<!-- ═══════════════════════ SVG TEMPLATES ═══════════════════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- corner ornament -->
+    <symbol id="corner-orn" viewBox="0 0 36 36">
+      <g fill="none" stroke="#8e7338" stroke-width="0.9">
+        <path d="M2,18 Q2,2 18,2"/>
+        <path d="M2,12 Q4,4 12,2" opacity="0.6"/>
+        <circle cx="6" cy="6" r="1.4" fill="#8e7338"/>
+        <path d="M2,18 L8,18 M18,2 L18,8"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+// ═══════════════════════ DATA ═══════════════════════
+
+const TRIADS = {
+  materia: {
+    roman: "I",
+    name: "Materia",
+    en: "the magic of matter",
+    blurb: "Substance, form, and animate motion. The Materian shapes what already is — bending the qualities, the silhouette, or the very stride of the world's stuff.",
+    schools: ["Enchantment", "Transmutation", "Animation"],
+    color: "#a07840"
+  },
+  potentia: {
+    roman: "II",
+    name: "Potentia",
+    en: "the magic of raw power",
+    blurb: "Force given, force withheld, force redirected. Where Materia reshapes, Potentia exerts — calling out the elements, raising the ward, or laying hands at a distance.",
+    schools: ["Evocation", "Abjuration", "Kinesis"],
+    color: "#8a4a3a"
+  },
+  vocatio: {
+    roman: "III",
+    name: "Vocatio",
+    en: "the magic of calling & binding",
+    blurb: "To name a thing is to summon it; to summon it is to be answered. Vocatians draw from the loom of possibility, the far country, and the language of binding contracts.",
+    schools: ["Conjuration", "Summoning", "Pacting"],
+    color: "#5a4a7a"
+  },
+  mentis: {
+    roman: "IV",
+    name: "Mentis",
+    en: "the magic of the mind",
+    blurb: "Thought, perception, and the slipping veil between them. The Mentian works upon awareness itself — touching it, fooling it, or unraveling its quiet seams.",
+    schools: ["Telepathy", "Illusion", "Delirium"],
+    color: "#3e5a6e"
+  }
+};
+
+const SCHOOLS = [
+  {
+    id: "enchantment",
+    name: "Enchantment",
+    triad: "materia",
+    role: "the gilding of virtue into matter",
+    desc: "Imbues an object with a hidden virtue — strength, swiftness, luminance, ill-fortune — without changing its form. A blade may be sharp by craft, but enchanted, it remembers to remain sharp.",
+    flavour: "“To enchant is to teach a thing its truest name, and ask it to live up to that name forever after.” — Vellis the Patient",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <polygon points="32,6 54,18 54,46 32,58 10,46 10,18"/>
+      <polygon points="32,16 46,24 46,40 32,48 18,40 18,24" opacity="0.55"/>
+      <circle cx="32" cy="32" r="4" fill="#8e7338"/>
+      <line x1="32" y1="6" x2="32" y2="16"/>
+      <line x1="54" y1="18" x2="46" y2="24"/>
+      <line x1="54" y1="46" x2="46" y2="40"/>
+      <line x1="32" y1="58" x2="32" y2="48"/>
+      <line x1="10" y1="46" x2="18" y2="40"/>
+      <line x1="10" y1="18" x2="18" y2="24"/>
+    </svg>`
+  },
+  {
+    id: "transmutation",
+    name: "Transmutation",
+    triad: "materia",
+    role: "the rewriting of substance and form",
+    desc: "Alters what a thing fundamentally is — lead to silver, flesh to bark, river to road. Where enchantment whispers to the object, transmutation overwrites its first letter.",
+    flavour: "“Every substance is a sentence the world is reading aloud. The transmuter merely clears its throat.” — Brenwa of the Ash Forge",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <rect x="6" y="6" width="52" height="52"/>
+      <circle cx="32" cy="32" r="22"/>
+      <polygon points="32,14 50,46 14,46"/>
+      <circle cx="32" cy="36" r="3" fill="#8e7338"/>
+    </svg>`
+  },
+  {
+    id: "animation",
+    name: "Animation",
+    triad: "materia",
+    role: "the gift of motion to the still",
+    desc: "Grants autonomous action to objects that were never alive — a broom that sweeps without hand, a watchman of bronze, a letter that delivers itself. The animator borrows no soul; she leaves a small intention behind.",
+    flavour: "“Where breath was never granted, the Animator gives stride. The stride does not ask why.” — from the Lexicon of Murn",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <rect x="6" y="6" width="52" height="52"/>
+      <path d="M32,18 A14,14 0 1,1 18,32 A10,10 0 1,1 32,22 A6,6 0 1,1 26,28"/>
+      <circle cx="32" cy="18" r="2" fill="#8e7338"/>
+    </svg>`
+  },
+  {
+    id: "evocation",
+    name: "Evocation",
+    triad: "potentia",
+    role: "the calling-forth of elemental force",
+    desc: "Summons the great elements — flame, wind, frost, thunder — out of the air itself. The most dramatic of the schools, and the easiest to misjudge. Evokers do not bargain with fire; they introduce it.",
+    flavour: "“Storm, ember, and tide answer the evoker's cry — though seldom in the measure she asked for.” — Marshal Cyrra, On the Burning of Hesh",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <circle cx="32" cy="32" r="8"/>
+      <line x1="32" y1="6" x2="32" y2="22"/>
+      <line x1="32" y1="42" x2="32" y2="58"/>
+      <line x1="6" y1="32" x2="22" y2="32"/>
+      <line x1="42" y1="32" x2="58" y2="32"/>
+      <line x1="14" y1="14" x2="24" y2="24"/>
+      <line x1="40" y1="40" x2="50" y2="50"/>
+      <line x1="14" y1="50" x2="24" y2="40"/>
+      <line x1="40" y1="24" x2="50" y2="14"/>
+      <circle cx="32" cy="32" r="2" fill="#8e7338"/>
+    </svg>`
+  },
+  {
+    id: "abjuration",
+    name: "Abjuration",
+    triad: "potentia",
+    role: "the discipline of the ward and the mend",
+    desc: "Protects and restores. The abjurer raises wards against the storm, dispels what ought not to be there, and stitches what has been torn — flesh, oath, or stone alike. The quietest school, and the one most worth keeping near.",
+    flavour: "“The unseen vault, the silent ward, the wound made wholesome — these are the abjurer's three gifts, and she gives them without applause.” — Sister Olne of the Closing Hand",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <path d="M32,6 L52,14 L52,34 Q52,50 32,58 Q12,50 12,34 L12,14 Z"/>
+      <path d="M32,14 L46,20 L46,34 Q46,46 32,52 Q18,46 18,34 L18,20 Z" opacity="0.55"/>
+      <line x1="32" y1="22" x2="32" y2="44"/>
+      <line x1="22" y1="32" x2="42" y2="32"/>
+    </svg>`
+  },
+  {
+    id: "kinesis",
+    name: "Kinesis",
+    triad: "potentia",
+    role: "the laying-on of will at any distance",
+    desc: "Moves objects directly by act of will, with neither hand nor tool. A subtle school in skilled use — turning a key, deflecting an arrow, holding a falling friend aloft — and a brutal one when made loud.",
+    flavour: "“Distance is a courtesy, not a law. The kinesist excuses herself from it.” — Verick of Anval",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <circle cx="32" cy="32" r="22"/>
+      <line x1="14" y1="32" x2="50" y2="32"/>
+      <polyline points="44,26 50,32 44,38"/>
+      <polyline points="20,26 14,32 20,38"/>
+      <circle cx="32" cy="32" r="2.5" fill="#8e7338"/>
+    </svg>`
+  },
+  {
+    id: "conjuration",
+    name: "Conjuration",
+    triad: "vocatio",
+    role: "the weaving of substance from possibility",
+    desc: "Pulls into being objects and creatures of pure magical fabric — a sword that fades by dawn, a steed of light, a roof against rain. What the conjurer makes is never permanent, but for the hour it lasts, it is wholly real.",
+    flavour: "“From the loom of possibility, the conjurer pulls thread. From the thread she makes whatever the morning requires.” — Eldred of the Eight Looms",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <path d="M16,16 C28,16 28,48 40,48 C52,48 52,16 40,16 C28,16 28,48 16,48"/>
+      <circle cx="16" cy="16" r="2" fill="#8e7338"/>
+      <circle cx="40" cy="16" r="2" fill="#8e7338"/>
+      <circle cx="16" cy="48" r="2" fill="#8e7338"/>
+      <circle cx="40" cy="48" r="2" fill="#8e7338"/>
+    </svg>`
+  },
+  {
+    id: "summoning",
+    name: "Summoning",
+    triad: "vocatio",
+    role: "the calling of distant existing beings",
+    desc: "Calls beings already-existing across great distance — beasts of the deeper wood, spirits of named place, persons answering a written sigil. Summoning does not create. It pulls a thread, and waits to see who walks down it.",
+    flavour: "“Names spoken correctly will travel any distance. The trouble is that what hears them is not always what we named.” — Quill of Ravensreach",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <circle cx="32" cy="32" r="18"/>
+      <polygon points="32,16 38,30 50,30 40,38 44,50 32,42 20,50 24,38 14,30 26,30"/>
+      <line x1="32" y1="4" x2="32" y2="12"/>
+      <line x1="32" y1="52" x2="32" y2="60"/>
+      <line x1="4" y1="32" x2="12" y2="32"/>
+      <line x1="52" y1="32" x2="60" y2="32"/>
+    </svg>`
+  },
+  {
+    id: "pacting",
+    name: "Pacting",
+    triad: "vocatio",
+    role: "the binding of being by named contract",
+    desc: "Forges binding agreements between beings — between mortal and mortal, mortal and elder spirit, even spirit and spirit. The terms are absolute. The breach is always known. Pacters are rarely loved, but they are very often kept on retainer.",
+    flavour: "“Every signature is a small surrender. The pacter merely keeps a tidy ledger of which surrender is owed to whom.” — Master Halv, Court of the Long Table",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <circle cx="22" cy="32" r="14"/>
+      <circle cx="42" cy="32" r="14"/>
+      <line x1="6" y1="32" x2="58" y2="32" stroke-width="0.6"/>
+      <circle cx="22" cy="32" r="2" fill="#8e7338"/>
+      <circle cx="42" cy="32" r="2" fill="#8e7338"/>
+    </svg>`
+  },
+  {
+    id: "telepathy",
+    name: "Telepathy",
+    triad: "mentis",
+    role: "the reading and projecting of thought",
+    desc: "Touches mind to mind. Reads surface thoughts, projects images, carries whole conversations across rooms or kingdoms in perfect silence. Skilled telepaths can sense the shape of a lie before its speaker has finished telling it.",
+    flavour: "“Two minds touch, and a third is born between them — brief, blameless, and not entirely either's.” — Annis of the Twin Tower",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <path d="M14,32 A18,18 0 0,1 50,32"/>
+      <path d="M14,32 A18,18 0 0,0 50,32"/>
+      <circle cx="32" cy="32" r="4" fill="#8e7338"/>
+      <line x1="32" y1="14" x2="32" y2="20" opacity="0.5"/>
+      <line x1="32" y1="44" x2="32" y2="50" opacity="0.5"/>
+    </svg>`
+  },
+  {
+    id: "illusion",
+    name: "Illusion",
+    triad: "mentis",
+    role: "the fabrication of false perception",
+    desc: "Builds what is not there — sights, sounds, scents, the feel of warm hands. An illusion convinces the senses, but not the world: it leaves no footprints, no warmth, no body when the dawn comes.",
+    flavour: "“Truth is a single line. Falsehood, an entire garden. Illusionists are merely careful gardeners.” — Caspian of the Painted Wood",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <path d="M20,12 A20,20 0 1,0 20,52 A14,20 0 1,1 20,12 Z"/>
+      <path d="M44,12 A20,20 0 1,1 44,52 A14,20 0 1,0 44,12 Z" opacity="0.55"/>
+      <circle cx="32" cy="32" r="2" fill="#8e7338"/>
+    </svg>`
+  },
+  {
+    id: "delirium",
+    name: "Delirium",
+    triad: "mentis",
+    role: "the fracturing of reason and reality",
+    desc: "The forbidden school — though never quite forbidden enough. Delirium loosens the threads holding sense together: time stutters, geometry slips, the floor remembers being a sea. Mastery is rare, because the school does not always know which mind it is supposed to be teaching.",
+    flavour: "“Reason is a rope. The deliriarch teaches it to fray — and watches, with great interest, what the rope does next.” — anonymous, fragments recovered from the Cell at Vorre",
+    sigil: `<svg viewBox="0 0 64 64" fill="none" stroke="#8e7338" stroke-width="1.2">
+      <path d="M32,8 C50,8 50,32 32,32 C14,32 14,56 32,56" stroke-dasharray="2 3"/>
+      <path d="M32,8 C18,8 18,32 32,32 C46,32 46,56 32,56" stroke-dasharray="2 3" opacity="0.6"/>
+      <circle cx="32" cy="32" r="3" fill="#8e7338"/>
+      <circle cx="32" cy="8" r="1.5" fill="#8e7338"/>
+      <circle cx="32" cy="56" r="1.5" fill="#8e7338"/>
+    </svg>`
+  }
+];
+
+// ═══════════════════════ QUIZ DATA ═══════════════════════
+
+const QUIZ = [
+  {
+    q: "A leather-bound tome on your desk has caught fire. Your hand moves without thinking — to do what?",
+    answers: [
+      { t: "Snuff the flames from the air itself.",       w: { evocation: 2, abjuration: 1 } },
+      { t: "Lift the book, untouched, into the basin across the room.", w: { kinesis: 2, animation: 1 } },
+      { t: "Make the parchment refuse to burn.",          w: { enchantment: 2, transmutation: 1 } },
+      { t: "Look again, and see that no fire was ever there.", w: { illusion: 2, delirium: 1 } }
+    ]
+  },
+  {
+    q: "You find yourself before a forgotten temple in a forest of black pine. What pulls at you first?",
+    answers: [
+      { t: "The unfamiliar grain of the stone — what was it, before?", w: { transmutation: 2, enchantment: 1 } },
+      { t: "The faded carvings of creatures whose names I half-remember.", w: { summoning: 2, conjuration: 1 } },
+      { t: "The ward-script worked into the threshold — still warm.", w: { abjuration: 2, pacting: 1 } },
+      { t: "The whispers from the dark interior, which only I appear to hear.", w: { telepathy: 1, delirium: 2 } }
+    ]
+  },
+  {
+    q: "An opponent stands across the dueling-circle. Your first move is —",
+    answers: [
+      { t: "An overwhelming exertion — let the elements settle the matter.", w: { evocation: 2, kinesis: 1 } },
+      { t: "Reshape the ground beneath them. Win the terrain, win the fight.", w: { transmutation: 2, animation: 1 } },
+      { t: "Make them doubt where I am standing. Or whether I am there at all.", w: { illusion: 2, delirium: 1 } },
+      { t: "Lean on a debt owed me by something older than either of us.", w: { pacting: 2, summoning: 1 } }
+    ]
+  },
+  {
+    q: "Of all that magic can do, the most beautiful thing is —",
+    answers: [
+      { t: "The way it transfigures a humble thing into a wondrous one.", w: { transmutation: 1, enchantment: 2 } },
+      { t: "The way it draws forth what was never present before.",      w: { conjuration: 2, summoning: 1 } },
+      { t: "The way one mind may quietly touch another, and both be changed.", w: { telepathy: 2, illusion: 1 } },
+      { t: "The way it bends what the world insisted was fixed.",         w: { kinesis: 1, delirium: 1, evocation: 1 } }
+    ]
+  },
+  {
+    q: "Were a stranger to walk uninvited into your study, what would they find?",
+    answers: [
+      { t: "Half-finished bronze figures, gears in jars, a kettle that pours itself.", w: { animation: 2, enchantment: 1 } },
+      { t: "Glass vessels of dim liquids; chalked diagrams over half-finished work.",  w: { transmutation: 2, conjuration: 1 } },
+      { t: "Bound ledgers of names, signed contracts in red wax, a single open ring.", w: { pacting: 2, summoning: 1 } },
+      { t: "Mirrors at unhelpful angles. Masks, hung in a row. A door I refuse to discuss.", w: { illusion: 1, delirium: 2 } }
+    ]
+  },
+  {
+    q: "Magic, properly used, is best put toward —",
+    answers: [
+      { t: "Shielding those who cannot shield themselves.",   w: { abjuration: 2, enchantment: 1 } },
+      { t: "Drawing out the truth of things hidden.",         w: { telepathy: 2, summoning: 1 } },
+      { t: "Bringing into being what the world is missing.",  w: { conjuration: 2, animation: 1 } },
+      { t: "Moving past the limits the world is fond of imposing.", w: { kinesis: 2, evocation: 1 } }
+    ]
+  }
+];
+
+// ═══════════════════════ RENDER TRIADS ═══════════════════════
+
+const triadsEl = document.querySelector(".triads");
+const triadOrder = ["materia", "potentia", "vocatio", "mentis"];
+
+const triadSigil = `<svg viewBox="0 0 220 220" fill="none" stroke="#8e7338" stroke-width="1">
+  <circle cx="110" cy="110" r="100"/>
+  <circle cx="110" cy="110" r="76"/>
+  <polygon points="110,30 175,140 45,140"/>
+  <polygon points="110,190 45,80 175,80" opacity="0.6"/>
+  <circle cx="110" cy="110" r="6" fill="#8e7338"/>
+</svg>`;
+
+triadOrder.forEach((id, i) => {
+  const t = TRIADS[id];
+  const card = document.createElement("div");
+  card.className = `triad-card parchment reveal delay-${i+1}`;
+  card.innerHTML = `
+    <div class="frame-deco tl"><svg><use href="#corner-orn"/></svg></div>
+    <div class="frame-deco tr"><svg><use href="#corner-orn"/></svg></div>
+    <div class="frame-deco bl"><svg><use href="#corner-orn"/></svg></div>
+    <div class="frame-deco br"><svg><use href="#corner-orn"/></svg></div>
+    <div class="roman-num">Triad ${t.roman}</div>
+    <div class="name">${t.name}</div>
+    <div class="en">${t.en}</div>
+    <div class="blurb">${t.blurb}</div>
+    <div class="schools">
+      ${t.schools.map(s => `<span>${s}</span>`).join("")}
+    </div>
+    <div class="sigil-bg">${triadSigil}</div>
+  `;
+  card.addEventListener("click", () => {
+    // scroll to schools section, focusing the band
+    const target = document.getElementById(`band-${id}`);
+    if (target) target.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  triadsEl.appendChild(card);
+});
+
+// ═══════════════════════ RENDER SCHOOLS (grouped by triad) ═══════════════════════
+
+const schoolsContainer = document.getElementById("schools-container");
+
+triadOrder.forEach((tid, ti) => {
+  const triad = TRIADS[tid];
+  const band = document.createElement("div");
+  band.className = "triad-band reveal";
+  band.id = `band-${tid}`;
+  band.innerHTML = `
+    <div class="band-head">
+      <div class="num">Triad ${triad.roman}</div>
+      <div class="nm">${triad.name}</div>
+      <div class="en">— ${triad.en}</div>
+    </div>
+    <div class="school-grid" id="grid-${tid}"></div>
+  `;
+  schoolsContainer.appendChild(band);
+});
+
+SCHOOLS.forEach((s, i) => {
+  const grid = document.getElementById(`grid-${s.triad}`);
+  const card = document.createElement("div");
+  card.className = "school-card parchment tight";
+  card.innerHTML = `
+    <div class="frame-deco tl"><svg><use href="#corner-orn"/></svg></div>
+    <div class="frame-deco tr"><svg><use href="#corner-orn"/></svg></div>
+    <div class="sigil">${s.sigil}</div>
+    <div class="nm">${s.name}</div>
+    <div class="role">${s.role}</div>
+    <div class="desc">${s.desc}</div>
+    <div class="more">Read entry</div>
+  `;
+  card.addEventListener("click", () => openModal(s.id));
+  grid.appendChild(card);
+});
+
+// ═══════════════════════ MODAL ═══════════════════════
+
+const modalBack = document.getElementById("modal-back");
+const modalEl = document.getElementById("modal");
+
+function openModal(schoolId) {
+  const s = SCHOOLS.find(x => x.id === schoolId);
+  if (!s) return;
+  const t = TRIADS[s.triad];
+  modalEl.innerHTML = `
+    <button class="close" aria-label="Close">✕</button>
+    <div class="frame-deco tl"><svg><use href="#corner-orn"/></svg></div>
+    <div class="frame-deco tr"><svg><use href="#corner-orn"/></svg></div>
+    <div class="frame-deco bl"><svg><use href="#corner-orn"/></svg></div>
+    <div class="frame-deco br"><svg><use href="#corner-orn"/></svg></div>
+
+    <div class="triad-tag">Triad ${t.roman} · ${t.name} · ${t.en}</div>
+    <div class="nm">${s.name}</div>
+    <div class="role">${s.role}</div>
+
+    <div class="sigil-row">
+      <div class="sg">${s.sigil}</div>
+      <div class="pl">
+        <strong>Sigillum</strong>
+        Each school is taught and remembered by its own sigil. Apprentices copy it ten thousand times before they are permitted its first working.
+      </div>
+    </div>
+
+    <h4>Definition</h4>
+    <p>${s.desc}</p>
+
+    <h4>Words of the Masters</h4>
+    <p class="flavour">${s.flavour}</p>
+
+    <h4>Kindred Schools</h4>
+    <p>Within the triad of <em>${t.name}</em>, ${s.name} stands alongside ${t.schools.filter(x => x !== s.name).join(" and ")}.</p>
+  `;
+  modalBack.classList.add("open");
+  document.body.style.overflow = "hidden";
+  modalEl.querySelector(".close").addEventListener("click", closeModal);
+}
+
+function closeModal() {
+  modalBack.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+modalBack.addEventListener("click", (e) => {
+  if (e.target === modalBack) closeModal();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeModal();
+});
+
+// ═══════════════════════ QUIZ ═══════════════════════
+
+const quizBody = document.getElementById("quiz-body");
+let quizIdx = 0;
+const quizAnswers = []; // array of weight maps
+
+function renderQuiz() {
+  if (quizIdx >= QUIZ.length) { renderResult(); return; }
+  const q = QUIZ[quizIdx];
+  const total = QUIZ.length;
+  const steps = Array.from({length: total}, (_, i) => {
+    if (i < quizIdx) return `<span class="step done"></span>`;
+    if (i === quizIdx) return `<span class="step curr"></span>`;
+    return `<span class="step"></span>`;
+  }).join("");
+
+  quizBody.innerHTML = `
+    <div class="quiz-stage">
+      <div class="quiz-progress">${steps}</div>
+      <div class="quiz-counter">Question ${romanize(quizIdx+1)} of ${romanize(total)}</div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-answers">
+        ${q.answers.map((a, ai) => `
+          <button class="quiz-answer" data-idx="${ai}">
+            <span class="marker">${String.fromCharCode(65+ai)}</span>
+            <span>${a.t}</span>
+          </button>
+        `).join("")}
+      </div>
+      <div class="quiz-nav">
+        <button id="quiz-back" ${quizIdx === 0 ? "disabled" : ""}>← Previous</button>
+        <span></span>
+      </div>
+    </div>
+  `;
+
+  quizBody.querySelectorAll(".quiz-answer").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const ai = +btn.dataset.idx;
+      quizAnswers[quizIdx] = q.answers[ai].w;
+      quizIdx++;
+      renderQuiz();
+    });
+  });
+  const back = document.getElementById("quiz-back");
+  if (back) back.addEventListener("click", () => {
+    if (quizIdx > 0) { quizIdx--; renderQuiz(); }
+  });
+}
+
+function renderResult() {
+  // tally weights
+  const totals = {};
+  SCHOOLS.forEach(s => totals[s.id] = 0);
+  quizAnswers.forEach(w => {
+    for (const k in w) totals[k] = (totals[k] || 0) + w[k];
+  });
+  const ranked = Object.entries(totals).sort((a,b) => b[1] - a[1]);
+  const top = SCHOOLS.find(s => s.id === ranked[0][0]);
+  const second = SCHOOLS.find(s => s.id === ranked[1][0]);
+  const t = TRIADS[top.triad];
+
+  quizBody.innerHTML = `
+    <div class="quiz-stage result-stage">
+      <div class="pre">The Codex has spoken</div>
+      <div class="sigil">${top.sigil}</div>
+      <div class="nm">${top.name}</div>
+      <div class="triad">Triad ${t.roman} · ${t.name} — ${t.en}</div>
+      <div class="blurb">${top.desc}</div>
+      <div class="flavour">${top.flavour}</div>
+      <div class="alt">
+        <strong>Second Affinity</strong><br/>
+        <em>${second.name}</em> — ${second.role}
+      </div>
+      <div class="quiz-nav">
+        <button class="restart" id="quiz-restart">↺ Begin the rite anew</button>
+        <button id="quiz-readmore" data-school="${top.id}">Read full entry →</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("quiz-restart").addEventListener("click", () => {
+    quizIdx = 0; quizAnswers.length = 0; renderQuiz();
+  });
+  document.getElementById("quiz-readmore").addEventListener("click", (e) => {
+    openModal(e.currentTarget.dataset.school);
+  });
+}
+
+function romanize(n) {
+  const map = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+  return map[n] || String(n);
+}
+
+renderQuiz();
+
+// ═══════════════════════ SCROLL REVEAL ═══════════════════════
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add("in");
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+// ═══════════════════════ NAV BG ON SCROLL ═══════════════════════
+
+const nav = document.querySelector(".codex-nav");
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 80) {
+    nav.style.background = "rgba(7,16,30,0.92)";
+    nav.style.borderBottom = "1px solid rgba(201,169,97,0.15)";
+  } else {
+    nav.style.background = "linear-gradient(180deg, rgba(7,16,30,0.85) 0%, rgba(7,16,30,0) 100%)";
+    nav.style.borderBottom = "none";
+  }
+});
+
+// smooth scroll for nav links
+document.querySelectorAll('.codex-nav a[href^="#"]').forEach(a => {
+  a.addEventListener("click", (e) => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute("href"));
+    if (t) t.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+});
+</script>
+</body>
+</html>
