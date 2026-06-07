@@ -1,0 +1,91 @@
+---
+import CodexLayout from "../../layouts/CodexLayout.astro";
+import SectionHead from "../../components/SectionHead.astro";
+import AtlasMap from "../../components/AtlasMap.astro";
+import "../../styles/terrae.css";
+
+const navLinks = [
+  { href: "#atlas", label: "The Atlas" },
+  { href: "#engine", label: "The Engine" },
+];
+---
+
+<CodexLayout
+  title="Liber II · Terrae — The Cartographer's Atlas"
+  description="The lands of the world — realms, geography, and the living map engine that conjures them anew from a single seed."
+  domain="terrae"
+  brand="Codex·Terrae"
+  navLinks={navLinks}
+>
+  <!-- HERO -->
+  <header class="terrae-hero">
+    <div class="terrae-crest">
+      <svg viewBox="0 0 64 64" fill="none" stroke="var(--accent-bright)" stroke-width="1.4">
+        <path d="M9,40 Q21,28 32,40 T55,40"/>
+        <path d="M9,48 Q21,36 32,48 T55,48"/>
+        <circle cx="32" cy="18" r="7"/>
+        <path d="M32,11 L32,4 M32,25 L32,30" opacity=".6"/>
+      </svg>
+    </div>
+    <div class="eyebrow reveal delay-1">Liber II · Terrae</div>
+    <h1 class="reveal delay-2">
+      The Cartographer's<br />Atlas
+      <span class="amp">— or, the living map of the world —</span>
+    </h1>
+    <p class="tagline reveal delay-3">
+      A world conjured from a single integer — elevation, climate, biomes, rivers, and the Winds of
+      Magic, all derived. Nothing authored. Change the seed; receive a new world.
+    </p>
+    <div class="meta reveal delay-4">
+      <span><b>Engine</b> seed → world-state</span>
+      <span><b>Renderer</b> world-state → SVG</span>
+      <span><b>Biomes</b> 9 types</span>
+      <span><b>Magic</b> the Winds</span>
+    </div>
+  </header>
+
+  <!-- ATLAS ISLAND -->
+  <section class="codex" id="atlas">
+    <SectionHead
+      roman="The Cartographer's Plate"
+      title="The Living Map"
+      sub="Choose a seed, a rendering channel, and a magic layer. Every hex is queryable — hover to read biome, mana strength, and grid position."
+    />
+    <div class="wrap">
+      <AtlasMap />
+    </div>
+  </section>
+
+  <!-- ENGINE BRIEF -->
+  <section class="codex" id="engine" style="background: var(--navy-rich)">
+    <div class="wrap-narrow">
+      <SectionHead
+        roman="The Engine"
+        title="How the World is Made"
+        sub="Five procedural fields, in sequence — from raw noise to a fully typed world-state."
+      />
+      <div class="parchment panel reveal" style="position:relative">
+        <div class="frame-deco tl">
+          <svg aria-hidden="true"><use href="#corner-orn" /></svg>
+        </div>
+        <div class="frame-deco tr">
+          <svg aria-hidden="true"><use href="#corner-orn" /></svg>
+        </div>
+        <ol style="list-style:none; display:grid; gap:18px;">
+          {[
+            ["I · Elevation", "Domain-warped fBm with a continent mask plus an island — smoothed twice to form contiguous highland ranges rather than salt-and-pepper peaks."],
+            ["II · Temperature", "Latitude band with a lapse rate — warmer toward the equator band, colder at altitude."],
+            ["III · Moisture", "Coastal proximity boost combined with rain-shadow loss from elevation."],
+            ["IV · Biomes", "Percentile-based thresholds on land elevation — peaks are always the top 6%, regardless of seed — combined with temperature and moisture rules for 9 biome types."],
+            ["V · The Winds of Magic", "A single mana field: low-frequency fBm pockets of high and low wind, punctuated by five seeded Gaussian wells. No affinity, no type — only stronger and weaker founts."],
+          ].map(([title, body]) => (
+            <li style="display:flex; gap:18px; align-items:baseline;">
+              <span style="font-family:var(--f-display); font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--accent-ink); white-space:nowrap; min-width:120px;">{title}</span>
+              <span style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">{body}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+</CodexLayout>
