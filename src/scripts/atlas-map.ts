@@ -59,6 +59,13 @@ export function mountAtlasMap() {
     attachHover(plate?.querySelector("svg") ?? null);
   }
 
+  document.getElementById("btn-roll")?.addEventListener("click", () => {
+    const seed = Math.floor(Math.random() * 999999) + 1;
+    (document.getElementById("ctl-seed") as HTMLInputElement).value = String(seed);
+    generate(seed);
+    renderMap();
+  });
+
   document.getElementById("btn-generate")?.addEventListener("click", () => {
     const seed = parseInt((document.getElementById("ctl-seed") as HTMLInputElement).value, 10) || 73;
     generate(seed);

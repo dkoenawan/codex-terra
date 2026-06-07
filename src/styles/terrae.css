@@ -171,6 +171,12 @@
 }
 .ctrl-btn:hover { background: var(--accent-bright); transform: translateY(-1px); }
 .ctrl-btn:active { transform: translateY(0); }
+.ctrl-btn-ghost {
+  background: transparent;
+  color: var(--accent-ink);
+  border: 1px solid var(--parchment-shadow);
+}
+.ctrl-btn-ghost:hover { background: rgba(63,138,122,.08); color: var(--accent); }
 
 /* living-hd inside the map panel */
 .living-hd {
