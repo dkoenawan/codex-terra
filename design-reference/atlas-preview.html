@@ -1,0 +1,1299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Liber II · The Cartographer's Atlas — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ── Codex Terra Design Tokens ── */
+:root{
+  --navy:#0d1626;--navy-deep:#07101e;--navy-rich:#14213a;--navy-line:rgba(201,169,97,0.18);
+  --parchment:#e8d9b8;--parchment-warm:#ddc99e;--parchment-shadow:#b9a679;--vellum:#f0e6cd;
+  --ink:#2a2418;--ink-soft:#4a3f2a;--ink-faint:#6d5f44;
+  --gold:#c9a961;--gold-bright:#e3c178;--gold-deep:#8e7338;
+  --crimson:#6b1f24;
+  --accent:#3f8a7a;--accent-bright:#6cb6a4;--accent-deep:#2a5e52;--accent-ink:#2a5e52;
+  --f-display:"Cinzel",serif;--f-script:"Cormorant Garamond",serif;--f-body:"EB Garamond","Cormorant Garamond",serif;
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:22px;--s-6:30px;--s-7:44px;--s-8:64px;
+  --r-sm:2px;--r-pill:999px;
+  --shadow-card:inset 0 0 60px rgba(120,90,40,.35),inset 0 0 0 1px rgba(120,90,40,.18);
+  --shadow-tight:inset 0 0 30px rgba(120,90,40,.30),inset 0 0 0 1px rgba(120,90,40,.18);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:18px}
+body{
+  background:var(--navy);
+  background-image:radial-gradient(ellipse at 20% 50%,rgba(201,169,97,.06) 0%,transparent 60%),
+                   radial-gradient(ellipse at 80% 20%,rgba(63,138,122,.07) 0%,transparent 55%);
+  color:var(--parchment);
+  font-family:var(--f-body);
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+
+/* ── nav ── */
+.codex-nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px;
+  background:linear-gradient(to bottom,rgba(7,16,30,.92),transparent);
+  backdrop-filter:blur(8px);
+  transition:background .3s;
+}
+.codex-nav.scrolled{background:rgba(7,16,30,.96);border-bottom:1px solid var(--navy-line)}
+.brand{font-family:var(--f-display);font-size:14px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
+.links{display:flex;gap:28px}
+.links a{font-family:var(--f-display);font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.65;transition:opacity .2s}
+.links a:hover{opacity:1}
+
+/* ── surfaces ── */
+.parchment{
+  background:#e8d9b8;
+  background-image:radial-gradient(ellipse at 30% 20%,rgba(255,245,220,.55) 0%,transparent 60%),
+                   radial-gradient(ellipse at 70% 80%,rgba(180,150,80,.18) 0%,transparent 50%),
+                   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.045' style='mix-blend-mode:multiply'/%3E%3C/svg%3E");
+  box-shadow:var(--shadow-card);
+  color:var(--ink);
+}
+.vellum{
+  background:#f0e6cd;
+  background-image:radial-gradient(ellipse at 50% 30%,rgba(255,250,235,.6) 0%,transparent 65%),
+                   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.035' style='mix-blend-mode:multiply'/%3E%3C/svg%3E");
+  box-shadow:var(--shadow-tight);
+  color:var(--ink);
+}
+.panel{border-radius:var(--r-sm);padding:28px 30px;position:relative}
+
+/* ── corner ornaments ── */
+.frame-deco{position:absolute;width:36px;height:36px;opacity:.7;pointer-events:none}
+.frame-deco svg{width:36px;height:36px}
+.frame-deco.tl{top:10px;left:10px}
+.frame-deco.tr{top:10px;right:10px;transform:scaleX(-1)}
+.frame-deco.bl{bottom:10px;left:10px;transform:scaleY(-1)}
+.frame-deco.br{bottom:10px;right:10px;transform:scale(-1)}
+
+/* ── section head ── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+.wrap-narrow{max-width:880px;margin:0 auto;padding:0 32px}
+.codex{padding:var(--s-8) 0}
+.on-navy-deep{background:var(--navy-deep)}
+.section-head{text-align:center;margin-bottom:48px}
+.section-head .roman{font-family:var(--f-display);font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.section-head h2{font-family:var(--f-display);font-size:clamp(30px,4vw,52px);color:var(--parchment);letter-spacing:.04em;line-height:1.1;margin-bottom:14px}
+.section-head .sub{font-family:var(--f-script);font-style:italic;font-size:19px;color:var(--parchment);opacity:.72;max-width:660px;margin:0 auto 20px}
+.rule{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px}
+.rule .l,.rule .r{flex:1;max-width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-deep),transparent)}
+.rule .d{width:6px;height:6px;border:1px solid var(--gold-deep);transform:rotate(45deg)}
+
+/* ── hero ── */
+.atlas-hero{position:relative;text-align:center;padding:140px 20px 60px;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.atlas-hero .eyebrow{display:inline-flex;align-items:center;gap:14px;font-family:var(--f-display);font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.atlas-hero .eyebrow::before,.atlas-hero .eyebrow::after{content:"";width:42px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.atlas-hero h1{font-family:var(--f-display);font-size:clamp(38px,6.4vw,78px);color:var(--parchment);letter-spacing:.04em;line-height:1.02;margin-bottom:18px}
+.atlas-hero .tagline{font-family:var(--f-script);font-style:italic;font-size:clamp(18px,2.2vw,24px);color:var(--parchment);opacity:.74;max-width:620px;margin:0 auto 28px}
+.atlas-hero .meta{display:flex;flex-wrap:wrap;gap:8px 30px;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--parchment);opacity:.55;letter-spacing:.02em}
+.atlas-hero .meta b{color:var(--gold);font-weight:500}
+
+/* ── desk note ── */
+.desk-note{position:relative;padding:28px 32px}
+.desk-note .from{font-family:var(--f-display);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:12px}
+.desk-note p{color:var(--ink-soft);font-size:16px;line-height:1.65;margin-bottom:10px}
+.desk-note p strong{color:var(--crimson)}
+.desk-note .decisions{list-style:none;margin:14px 0 0;display:grid;gap:8px}
+.desk-note .decisions li{display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--ink-soft)}
+.desk-note .decisions .d{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);white-space:nowrap;min-width:96px}
+.desk-note .decisions b{color:var(--ink);font-weight:600}
+
+/* ── control bar ── */
+.atlas-controls{
+  display:flex;flex-wrap:wrap;align-items:center;gap:16px 22px;
+  padding:16px 22px;
+  background:var(--parchment);
+  background-image:radial-gradient(ellipse at 30% 50%,rgba(255,245,220,.4) 0%,transparent 70%);
+  box-shadow:var(--shadow-tight);
+  border-radius:var(--r-sm);
+  margin-bottom:20px;
+}
+.ctrl-group{display:flex;align-items:center;gap:8px}
+.ctrl-label{font-family:var(--f-display);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-ink);white-space:nowrap}
+.ctrl-input{
+  font-family:"JetBrains Mono",monospace;font-size:13px;
+  background:transparent;border:none;border-bottom:1.5px solid var(--parchment-shadow);
+  color:var(--ink);padding:3px 6px;width:72px;text-align:center;
+  outline:none;transition:border-color .2s;
+}
+.ctrl-input:focus{border-color:var(--accent)}
+.ctrl-select{
+  font-family:var(--f-display);font-size:10px;letter-spacing:.1em;
+  background:transparent;border:1px solid var(--parchment-shadow);
+  color:var(--ink);padding:5px 10px;border-radius:var(--r-sm);
+  outline:none;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238e7338'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;padding-right:22px;
+}
+.ctrl-range{accent-color:var(--accent);width:100px;cursor:pointer}
+.ctrl-checkbox{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+.ctrl-btn{
+  font-family:var(--f-display);font-size:10px;letter-spacing:.25em;text-transform:uppercase;
+  background:var(--accent);color:#fff;border:none;
+  padding:8px 18px;border-radius:var(--r-sm);cursor:pointer;
+  transition:background .2s,transform .15s;
+}
+.ctrl-btn:hover{background:var(--accent-bright);transform:translateY(-1px)}
+.ctrl-btn:active{transform:translateY(0)}
+.ctrl-btn-ghost{background:transparent;color:var(--accent-ink);border:1px solid var(--parchment-shadow)}
+.ctrl-btn-ghost:hover{background:rgba(63,138,122,.08);color:var(--accent)}
+.ctrl-sep{width:1px;height:28px;background:var(--parchment-shadow);opacity:.4;align-self:center}
+
+/* ── map plates ── */
+.atlas-svg{width:100%;height:auto;display:block;border-radius:2px;box-shadow:0 10px 30px -18px rgba(0,0,0,.6)}
+.dir-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:1040px){.dir-grid{grid-template-columns:1fr;max-width:620px;margin:0 auto}}
+.plate{padding:20px 20px 16px;cursor:default;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.plate-hd{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.plate .rn{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.14em;color:var(--accent-ink)}
+.plate .nm{font-family:var(--f-display);font-size:18px;letter-spacing:.04em;color:var(--ink)}
+.plate .note{font-family:var(--f-script);font-style:italic;font-size:14.5px;color:var(--ink-soft);margin-top:10px;line-height:1.45}
+.plate .foot{display:flex;justify-content:space-between;margin-top:10px;padding-top:9px;border-top:1px solid rgba(120,90,40,.22)}
+.plate .stat{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--ink-soft);opacity:.75}
+
+/* ── living plate ── */
+.living-wrap{position:relative;padding:20px 22px}
+.living-hd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.living-hd .lt{font-family:var(--f-display);font-size:16px;letter-spacing:.05em;color:var(--ink)}
+.living-hd .cur{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--accent-ink);letter-spacing:.04em}
+
+/* ── glyph specimen ── */
+.glyph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:16px}
+.gtile{padding:18px 12px 14px;text-align:center;border-radius:var(--r-sm)}
+.gbox{width:52px;height:52px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center}
+.gbox svg.spec{width:44px;height:44px;fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.gn{font-family:var(--f-display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+.gd{font-family:var(--f-script);font-style:italic;font-size:13px;color:var(--ink-soft)}
+
+/* ── palette ── */
+.pal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-bottom:28px}
+.pchip{display:flex;align-items:center;gap:10px}
+.pchip .c{width:36px;height:36px;border-radius:3px;flex-shrink:0;border:1px solid rgba(0,0,0,.08)}
+.pchip .n{font-family:var(--f-display);font-size:11px;letter-spacing:.1em;color:var(--parchment);margin-bottom:2px}
+.pchip .h{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--parchment);opacity:.5}
+.specimen-label{font-family:var(--f-display);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--parchment);opacity:.4;margin-bottom:14px}
+.ramp{display:flex;height:22px;border-radius:3px;overflow:hidden;margin-bottom:6px}
+.ramp i{flex:1}
+.ramp-labels{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:9.5px;color:var(--parchment);opacity:.4;letter-spacing:.04em}
+
+/* ── hex tooltip ── */
+#hex-tip{
+  position:fixed;pointer-events:none;z-index:100;
+  background:rgba(7,16,30,.92);border:1px solid var(--navy-line);
+  border-radius:var(--r-sm);padding:8px 12px;
+  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--parchment);
+  line-height:1.55;backdrop-filter:blur(6px);
+  opacity:0;transition:opacity .15s;
+  min-width:140px;
+}
+#hex-tip.visible{opacity:1}
+#hex-tip .tip-biome{color:var(--gold);font-weight:500;margin-bottom:2px}
+
+/* ── magic section ── */
+.mana-explainer{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+@media(max-width:700px){.mana-explainer{grid-template-columns:1fr}}
+.mana-card{padding:22px 24px;border-radius:var(--r-sm)}
+.mana-card .mc-head{font-family:var(--f-display);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:10px}
+.mana-card p{font-size:15px;line-height:1.6;color:var(--ink-soft)}
+.mana-demo{display:flex;align-items:center;gap:14px;margin-top:14px}
+.mana-well-demo{flex-shrink:0}
+.mana-desc{font-family:var(--f-script);font-style:italic;font-size:15px;color:var(--ink-soft)}
+
+/* ── footer ── */
+.codex-foot{background:var(--navy-deep);text-align:center;padding:64px 20px 44px}
+.codex-foot .l1{font-family:var(--f-display);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:14px}
+.codex-foot .l2{font-family:var(--f-script);font-style:italic;font-size:18px;color:var(--parchment);opacity:.55;margin-top:6px}
+.codex-foot .l3{font-family:var(--f-display);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-deep);margin-top:10px;opacity:.6}
+
+/* ── kbd ── */
+.kbd{font-family:"JetBrains Mono",monospace;font-size:11px;background:rgba(201,169,97,.12);border:1px solid rgba(201,169,97,.3);padding:1px 5px;border-radius:3px;color:var(--gold)}
+
+/* ── reveal ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.delay-1{transition-delay:.08s}.delay-2{transition-delay:.16s}.delay-3{transition-delay:.24s}.delay-4{transition-delay:.32s}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="corner-orn" viewBox="0 0 36 36">
+      <g fill="none" stroke="#8e7338" stroke-width="0.9">
+        <path d="M2,18 Q2,2 18,2"/>
+        <path d="M2,12 Q4,4 12,2" opacity="0.6"/>
+        <circle cx="6" cy="6" r="1.4" fill="#8e7338"/>
+        <path d="M2,18 L8,18 M18,2 L18,8"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="hex-tip"><div class="tip-biome" id="tip-biome"></div><div id="tip-coords"></div><div id="tip-mana"></div></div>
+
+<nav class="codex-nav" id="main-nav">
+  <span class="brand">Codex · Terrae</span>
+  <div class="links">
+    <a href="#choice">The Choice</a>
+    <a href="#living">The Plate</a>
+    <a href="#glyphs">Glyphs</a>
+    <a href="#palette">Palette</a>
+    <a href="#magic">Magic</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="atlas-hero">
+  <div class="eyebrow">Liber II · Terrae</div>
+  <h1>The Cartographer's<br/>Atlas</h1>
+  <p class="tagline">A living world conjured from a single integer. Elevation, climate, biomes, rivers, and the Winds of Magic — all derived, nothing authored.</p>
+  <div class="meta">
+    <span><b>Engine</b> atlas-core.js</span>
+    <span><b>Renderer</b> atlas-render.js</span>
+    <span><b>Glyphs</b> 10 symbols</span>
+    <span><b>Seed</b> 73 (default)</span>
+  </div>
+</header>
+
+<!-- DESK NOTE -->
+<section class="codex">
+  <div class="wrap-narrow">
+    <div class="desk-note parchment panel">
+      <div class="frame-deco tl"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="frame-deco tr"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="frame-deco bl"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="frame-deco br"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="from">The Cartographer's Desk</div>
+      <p>Three decisions are finalised. Capture them here so nothing is relitigated downstream.</p>
+      <ul class="decisions">
+        <li><span class="d">Land &amp; Magic</span><span><b>The land is the map; magic is a quiet, opt-in layer.</b> Switch it off and you have an aged atlas. Switch it on and the Winds of Magic bloom over the terrain.</span></li>
+        <li><span class="d">No Affinity</span><span><b>Magic has no type per location.</b> Mana is one fuel — like the Winds of Magic in Total War: Warhammer — that drifts and pools across the whole world. There are wells (concentrated founts) and dead-calm zones, nothing more.</span></li>
+        <li><span class="d">Percentile Biomes</span><span><b>Biome thresholds are percentile-based on landmass hypsometry,</b> not absolute elevation cutoffs. Every world has realistic proportions of highlands versus lowlands regardless of seed.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- THE CHOICE — three static direction plates -->
+<section class="codex" id="choice">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="roman">I · The Choice</div>
+      <h2>Three Terrain Channels</h2>
+      <p class="sub">The same world, three rendering modes. One is selected for the living plate below — change it at any time.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="dir-grid reveal delay-1" id="dir-grid"></div>
+  </div>
+</section>
+
+<!-- THE LIVING PLATE -->
+<section class="codex" id="living" style="background:var(--navy-rich)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="roman">II · The Plate</div>
+      <h2>The Plate You Can Change</h2>
+      <p class="sub">Adjust seed, channel, magic, or density — then hit Generate to conjure a new world, or let the render update live.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+
+    <!-- CONTROL BAR -->
+    <div class="atlas-controls reveal delay-1" id="controls">
+      <div class="ctrl-group">
+        <label class="ctrl-label" for="ctl-seed">Seed</label>
+        <input class="ctrl-input" id="ctl-seed" type="number" min="1" max="999999" value="73"/>
+      </div>
+      <div class="ctrl-sep"></div>
+      <div class="ctrl-group">
+        <label class="ctrl-label" for="ctl-channel">Channel</label>
+        <select class="ctrl-select" id="ctl-channel">
+          <option value="glyph">Glyphs</option>
+          <option value="relief">Relief</option>
+          <option value="hypso">Hypsometric</option>
+          <option value="stack">Full Stack</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label class="ctrl-label" for="ctl-magic">Magic</label>
+        <select class="ctrl-select" id="ctl-magic">
+          <option value="nodes" selected>Wells</option>
+          <option value="wash">Winds</option>
+          <option value="off">Hidden</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label class="ctrl-label" for="ctl-density">Density</label>
+        <input class="ctrl-range" id="ctl-density" type="range" min="0" max="100" value="59"/>
+        <span id="ctl-density-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-ink);min-width:28px">59</span>
+      </div>
+      <div class="ctrl-group">
+        <label class="ctrl-label" for="ctl-coast">Coast</label>
+        <input class="ctrl-checkbox" id="ctl-coast" type="checkbox" checked/>
+      </div>
+      <div class="ctrl-sep"></div>
+      <button class="ctrl-btn ctrl-btn-ghost" id="btn-roll">⚄ Roll</button>
+      <button class="ctrl-btn" id="btn-generate">Generate</button>
+    </div>
+
+    <div class="vellum panel reveal delay-2" style="position:relative">
+      <div class="frame-deco tl"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="frame-deco tr"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="living-hd">
+        <span class="lt" id="living-seed-label">Terra · seed 73</span>
+        <span class="cur" id="living-cur">channel: glyphs · magic: wells</span>
+      </div>
+      <div id="living-plate"></div>
+    </div>
+    <p style="font-family:var(--f-script);font-style:italic;font-size:14px;color:var(--parchment);opacity:.55;text-align:center;margin-top:14px">Hover any hex to read its biome, mana strength, and grid coordinates.</p>
+  </div>
+</section>
+
+<!-- GLYPHS -->
+<section class="codex on-navy-deep" id="glyphs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="roman">III · The Hand</div>
+      <h2>The Glyph Library</h2>
+      <p class="sub">Each landform and cover, drawn once as a reusable symbol — the confident engraver's line. Restyle one rule, every hex follows.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="vellum panel reveal delay-1" style="position:relative">
+      <div class="frame-deco tl"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="frame-deco tr"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="glyph-grid" id="glyph-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PALETTE -->
+<section class="codex" id="palette">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="roman">IV · The Hooks</div>
+      <h2>Palette &amp; Channels</h2>
+      <p class="sub">Colours come from variables, never baked into fills — so the whole atlas re-themes from one place.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="parchment panel reveal delay-1" style="position:relative">
+      <div class="frame-deco tl"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="frame-deco tr"><svg aria-hidden="true"><use href="#corner-orn"/></svg></div>
+      <div class="specimen-label">Ground &amp; Ink</div>
+      <div class="pal-grid">
+        <div class="pchip"><div class="c" style="background:#bcd4dc"></div><div class="l"><div class="n">Sea</div><div class="h">#bcd4dc</div></div></div>
+        <div class="pchip"><div class="c" style="background:#e8d9b8"></div><div class="l"><div class="n">Land</div><div class="h">#e8d9b8</div></div></div>
+        <div class="pchip"><div class="c" style="background:#6b5130"></div><div class="l"><div class="n">Coast</div><div class="h">#6b5130</div></div></div>
+        <div class="pchip"><div class="c" style="background:#5d8aa0"></div><div class="l"><div class="n">River</div><div class="h">#5d8aa0</div></div></div>
+        <div class="pchip"><div class="c" style="background:#2a2418"></div><div class="l"><div class="n">Glyph Ink</div><div class="h">#2a2418</div></div></div>
+        <div class="pchip"><div class="c" style="background:#6a5a9c"></div><div class="l"><div class="n">Mana</div><div class="h">#6a5a9c</div></div></div>
+      </div>
+      <div class="specimen-label" style="margin-top:8px">Hypsometric ramp · sea depth → summit</div>
+      <div class="ramp">
+        <i style="background:#7fa6b4"></i><i style="background:#9cc0cb"></i><i style="background:#bcd4dc"></i>
+        <i style="background:#9fae72"></i><i style="background:#bcbd80"></i><i style="background:#cdbd84"></i>
+        <i style="background:#c8a463"></i><i style="background:#b88a52"></i><i style="background:#9c7146"></i>
+        <i style="background:#b6a487"></i><i style="background:#efe7d4"></i>
+      </div>
+      <div class="ramp-labels"><span>deep sea</span><span>coast</span><span>lowland</span><span>highland</span><span>peak</span></div>
+      <div class="specimen-label" style="margin-top:22px">Biome tints (blended into parchment at 42%)</div>
+      <div class="pal-grid">
+        <div class="pchip"><div class="c" style="background:#e0d2a8"></div><div class="l"><div class="n" style="color:var(--ink)">Coast</div><div class="h" style="color:var(--ink-faint)">#e0d2a8</div></div></div>
+        <div class="pchip"><div class="c" style="background:#9fb39a"></div><div class="l"><div class="n" style="color:var(--ink)">Marsh</div><div class="h" style="color:var(--ink-faint)">#9fb39a</div></div></div>
+        <div class="pchip"><div class="c" style="background:#c2c585"></div><div class="l"><div class="n" style="color:var(--ink)">Pasture</div><div class="h" style="color:var(--ink-faint)">#c2c585</div></div></div>
+        <div class="pchip"><div class="c" style="background:#8ba869"></div><div class="l"><div class="n" style="color:var(--ink)">Forest</div><div class="h" style="color:var(--ink-faint)">#8ba869</div></div></div>
+        <div class="pchip"><div class="c" style="background:#cbb079"></div><div class="l"><div class="n" style="color:var(--ink)">Hills</div><div class="h" style="color:var(--ink-faint)">#cbb079</div></div></div>
+        <div class="pchip"><div class="c" style="background:#b3a288"></div><div class="l"><div class="n" style="color:var(--ink)">Mountain</div><div class="h" style="color:var(--ink-faint)">#b3a288</div></div></div>
+        <div class="pchip"><div class="c" style="background:#ece7da"></div><div class="l"><div class="n" style="color:var(--ink)">Peak</div><div class="h" style="color:var(--ink-faint)">#ece7da</div></div></div>
+        <div class="pchip"><div class="c" style="background:#dcc488"></div><div class="l"><div class="n" style="color:var(--ink)">Desert</div><div class="h" style="color:var(--ink-faint)">#dcc488</div></div></div>
+        <div class="pchip"><div class="c" style="background:#d2dadb"></div><div class="l"><div class="n" style="color:var(--ink)">Tundra</div><div class="h" style="color:var(--ink-faint)">#d2dadb</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAGIC -->
+<section class="codex on-navy-deep" id="magic">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="roman">V · The Winds</div>
+      <h2>The Winds of Magic</h2>
+      <p class="sub">One mana field. No affinity. The wind blows where it will — gathering into wells, fading into dead-calm zones.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="mana-explainer reveal delay-1">
+      <div class="mana-card parchment">
+        <div class="mc-head">The Model</div>
+        <p>Mana is a single fuel that drifts across the entire world — sea and land alike. It gathers into <strong>wells</strong> (concentrated founts) and disperses into dead-calm zones. The terrain only lightly stirs it: rugged ground causes a gust, deep ocean a slight lull. There are no types, no schools, no affinities at the geographic level.</p>
+        <p style="margin-top:10px">This is intentional. The schools of the Arcana impose <em>human</em> categories on magic; the world itself does not. A mage of Evocation draws from the same wind as a mage of Enchantment — only their art differs.</p>
+      </div>
+      <div class="mana-card parchment">
+        <div class="mc-head">The Two Modes</div>
+        <p><strong>Wells</strong> — three concentric rings mark the strongest pockets of the wind. Useful for worldbuilding: where would mages build academies? Where do ley lines converge?</p>
+        <p style="margin-top:10px"><strong>Winds</strong> — the full mana field as a violet wash over the terrain, intensity = opacity. Shows how the wind fills the world — not just the peaks but the broad, soft pockets between.</p>
+        <div class="mana-demo" style="margin-top:16px">
+          <div class="mana-well-demo">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="22" fill="none" stroke="#6a5a9c" stroke-width="1.4" stroke-opacity=".42"/>
+              <circle cx="30" cy="30" r="12" fill="none" stroke="#6a5a9c" stroke-width="1.4" stroke-opacity=".72"/>
+              <circle cx="30" cy="30" r="5" fill="#9079d6"/>
+            </svg>
+          </div>
+          <p class="mana-desc">A well — three rings scaled by intensity, the bright core the strongest point of the wind's gathering.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="codex-foot">
+  <svg width="60" height="60" viewBox="0 0 64 64" fill="none" stroke="#6cb6a4" stroke-width="1.2" opacity=".5">
+    <path d="M9,40 Q21,28 32,40 T55,40"/>
+    <path d="M9,48 Q21,36 32,48 T55,48"/>
+    <circle cx="32" cy="18" r="7"/>
+    <path d="M32,11 L32,4 M32,25 L32,30" opacity=".6"/>
+  </svg>
+  <div class="l1">Liber II · Terrae</div>
+  <div class="l2">Design reference — the map engine for Codex Terra</div>
+  <div class="l3">atlas-preview.html · open and edit freely</div>
+</footer>
+
+<!-- ENGINE SCRIPTS (inlined — no external dependencies) -->
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   THE CARTOGRAPHER'S ENGINE — core (design prototype of /engine)
+   ─────────────────────────────────────────────────────────────────────
+   A faithful JS stand-in for the Python pipeline described in Liber II.
+   Physics is computed first; a single mana field (the Winds of Magic) is
+   laid over it as its own layer — no affinities, just stronger & weaker
+   pockets. Emits a world-state object shaped like the §IV contract.
+
+   This is design scaffolding so the atlas renders against a REAL world,
+   not a mock. Claude Code will re-implement the same chain in numpy.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function (global) {
+  'use strict';
+
+  // ── seeded PRNG + value-noise (fBm) ──────────────────────────────────
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function makeNoise(seed) {
+    // hash-based value noise on an integer lattice, smooth-interpolated
+    const rnd = mulberry32(seed);
+    const perm = new Float32Array(512);
+    for (let i = 0; i < 512; i++) perm[i] = rnd();
+    const hash = (x, y) => {
+      const xi = ((x % 256) + 256) % 256;
+      const yi = ((y % 256) + 256) % 256;
+      return perm[(xi + perm[yi]) & 511];
+    };
+    const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+    const lerp = (a, b, t) => a + (b - a) * t;
+    return function value(x, y) {
+      const x0 = Math.floor(x), y0 = Math.floor(y);
+      const fx = fade(x - x0), fy = fade(y - y0);
+      const v00 = hash(x0, y0), v10 = hash(x0 + 1, y0);
+      const v01 = hash(x0, y0 + 1), v11 = hash(x0 + 1, y0 + 1);
+      return lerp(lerp(v00, v10, fx), lerp(v01, v11, fx), fy); // [0,1]
+    };
+  }
+  function fbmFactory(noise) {
+    return function fbm(x, y, oct = 5, lac = 2.0, gain = 0.5) {
+      let amp = 0.5, freq = 1, sum = 0, norm = 0;
+      for (let i = 0; i < oct; i++) {
+        sum += amp * noise(x * freq, y * freq);
+        norm += amp; amp *= gain; freq *= lac;
+      }
+      return sum / norm; // [0,1]
+    };
+  }
+
+  // ── hex geometry: flat-top, odd-q offset ─────────────────────────────
+  // (the hexagon is the bestagon — §V)
+  const SQRT3 = Math.sqrt(3);
+  function hexCenter(col, row, s, pad) {
+    const x = pad + s + s * 1.5 * col;
+    const y = pad + s * SQRT3 * (row + 0.5 * (col & 1)) + s * SQRT3 / 2;
+    return [x, y];
+  }
+  function hexPolygon(cx, cy, s) {
+    const pts = [];
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 180) * (60 * i);
+      pts.push([cx + s * Math.cos(a), cy + s * Math.sin(a)]);
+    }
+    return pts;
+  }
+  function mapPixelSize(cols, rows, s, pad) {
+    const w = pad * 2 + s + s * 1.5 * (cols - 1) + s; // last col right point
+    const h = pad * 2 + s * SQRT3 * (rows + 0.5);
+    return [w, h];
+  }
+  // odd-q neighbour tables (redblobgames)
+  const ODDQ = [
+    [[+1, 0], [+1, -1], [0, -1], [-1, -1], [-1, 0], [0, +1]], // even col
+    [[+1, +1], [+1, 0], [0, -1], [-1, 0], [-1, +1], [0, +1]], // odd col
+  ];
+  function neighbours(col, row, cols, rows) {
+    const out = [];
+    const dirs = ODDQ[col & 1];
+    for (const [dc, dr] of dirs) {
+      const c = col + dc, r = row + dr;
+      if (c >= 0 && c < cols && r >= 0 && r < rows) out.push([c, r]);
+    }
+    return out;
+  }
+
+  // ── biome enum ───────────────────────────────────────────────────────
+  const BIOME = {
+    OCEAN: 0, COAST: 1, MARSH: 2, PASTURE: 3, FOREST: 4,
+    HILLS: 5, MOUNTAIN: 6, PEAK: 7, DESERT: 8, TUNDRA: 9,
+  };
+  const BIOME_NAME = Object.fromEntries(Object.entries(BIOME).map(([k, v]) => [v, k.toLowerCase()]));
+
+  // ── the pipeline ─────────────────────────────────────────────────────
+  function generate(opts) {
+    const cfg = Object.assign({ seed: 73, cols: 96, rows: 60, seaLevel: 0.36 }, opts || {});
+    const { cols, rows, seed } = cfg;
+    const N = cols * rows;
+    const idx = (c, r) => r * cols + c;
+
+    const nElev = fbmFactory(makeNoise(seed));
+    const nWarp = fbmFactory(makeNoise(seed * 7 + 3));
+    const nStone = fbmFactory(makeNoise(seed * 13 + 101));
+    const nMoist = fbmFactory(makeNoise(seed * 17 + 57));
+    const nFault = fbmFactory(makeNoise(seed * 23 + 211));
+
+    const gauss = (nx, ny, cx, cy, rx, ry) => {
+      const dx = (nx - cx) / rx, dy = (ny - cy) / ry;
+      return Math.exp(-(dx * dx + dy * dy));
+    };
+
+    // FIELD 1 — elevation (continent shape: one landmass + an island) ----
+    const elevRaw = new Float32Array(N);
+    let eMin = Infinity, eMax = -Infinity;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const nx = c / cols;
+        const ny = (r + 0.5 * (c & 1)) / rows;
+        const wx = nx + 0.16 * (nWarp(nx * 2.4 + 11, ny * 2.4 + 7) - 0.5) + 0.07 * (nWarp(nx * 5 + 2, ny * 5 + 8) - 0.5);
+        const wy = ny + 0.16 * (nWarp(nx * 2.4 + 5, ny * 2.4 + 19) - 0.5) + 0.07 * (nWarp(nx * 5 + 9, ny * 5 + 3) - 0.5);
+        const n = nElev(wx * 2.2, wy * 2.2, 4);
+        const main = gauss(nx, ny, 0.42, 0.46, 0.34, 0.40);
+        const isle = gauss(nx, ny, 0.83, 0.74, 0.10, 0.085) * 0.9;
+        const land = Math.max(main, isle);
+        const e = n * 0.55 + land * 0.82 - 0.28;
+        elevRaw[idx(c, r)] = e;
+        if (e < eMin) eMin = e; if (e > eMax) eMax = e;
+      }
+    }
+    const elevation = new Float32Array(N);
+    for (let i = 0; i < N; i++) elevation[i] = (elevRaw[i] - eMin) / (eMax - eMin);
+    // smoothing pass: de-speckle so highlands form contiguous RANGES rather
+    // than salt-and-pepper peaks. Two light iterations of neighbour averaging.
+    for (let pass = 0; pass < 2; pass++) {
+      const next = new Float32Array(N);
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const i = idx(c, r); let sum = elevation[i] * 1.4, wt = 1.4;
+        for (const [nc, nr] of neighbours(c, r, cols, rows)) { sum += elevation[idx(nc, nr)]; wt += 1; }
+        next[i] = sum / wt;
+      }
+      elevation.set(next);
+    }
+    const sea = cfg.seaLevel;
+    const isLand = (i) => elevation[i] > sea;
+
+    // coast proximity (cheap BFS-ish: distance in hexes to nearest sea) ---
+    const coastDist = new Float32Array(N).fill(99);
+    // seed sea hexes adjacent to land as distance 0 on the land side
+    const queue = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = idx(c, r);
+      if (!isLand(i)) continue;
+      let touchesSea = false;
+      for (const [nc, nr] of neighbours(c, r, cols, rows)) if (!isLand(idx(nc, nr))) { touchesSea = true; break; }
+      if (touchesSea) { coastDist[i] = 0; queue.push([c, r]); }
+    }
+    for (let h = 0; h < queue.length; h++) {
+      const [c, r] = queue[h]; const d = coastDist[idx(c, r)];
+      for (const [nc, nr] of neighbours(c, r, cols, rows)) {
+        const ni = idx(nc, nr);
+        if (isLand(ni) && coastDist[ni] > d + 1) { coastDist[ni] = d + 1; queue.push([nc, nr]); }
+      }
+    }
+
+    // FIELD 2 — temperature (latitude band − lapse rate) -----------------
+    // FIELD 3 — moisture (noise + coastal boost − rain shadow) -----------
+    const temperature = new Float32Array(N);
+    const moisture = new Float32Array(N);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const i = idx(c, r);
+        const ny = (r + 0.5 * (c & 1)) / rows;
+        let t = 1 - Math.abs(ny - 0.60) * 1.55;          // warm band toward south
+        t -= 0.55 * Math.max(0, elevation[i] - sea);     // lapse rate
+        t += 0.06 * (nStone(c * 0.05, r * 0.05) - 0.5);
+        temperature[i] = Math.max(0, Math.min(1, t));
+        const cb = isLand(i) ? Math.max(0, 1 - coastDist[i] / 10) : 1;
+        let m = nMoist(c * 0.06 + 4, r * 0.06 + 9, 4) * 0.62 + cb * 0.34 - elevation[i] * 0.18;
+        moisture[i] = Math.max(0, Math.min(1, m));
+      }
+    }
+
+    // local slope / gradient (for relief shading + the wind's ruffle) ----
+    const slope = new Float32Array(N);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = idx(c, r); let mx = 0;
+      for (const [nc, nr] of neighbours(c, r, cols, rows)) mx = Math.max(mx, Math.abs(elevation[i] - elevation[idx(nc, nr)]));
+      slope[i] = mx;
+    }
+
+    // FIELD 4 — biome classification -------------------------------------
+    // Highland thresholds are PERCENTILE-based on land elevation, so the
+    // hypsometry is realistic (mostly lowland; mountains a concentrated
+    // minority that clusters into ranges) regardless of the noise seed.
+    const landElevs = [];
+    for (let i = 0; i < N; i++) if (isLand(i)) landElevs.push(elevation[i]);
+    landElevs.sort((a, b) => a - b);
+    const pct = (p) => landElevs.length ? landElevs[Math.min(landElevs.length - 1, Math.floor(p * landElevs.length))] : 1;
+    const T_PEAK = pct(0.94);   // top 6%  → peaks
+    const T_MTN  = pct(0.83);   // next 11% → mountains
+    const T_HILL = pct(0.64);   // next 19% → hills   (≈64% lowland)
+    const biome = new Uint8Array(N);
+    for (let i = 0; i < N; i++) {
+      if (!isLand(i)) { biome[i] = BIOME.OCEAN; continue; }
+      const e = elevation[i], t = temperature[i], m = moisture[i];
+      if (e > T_PEAK) { biome[i] = BIOME.PEAK; continue; }
+      if (e > T_MTN)  { biome[i] = BIOME.MOUNTAIN; continue; }
+      if (e > T_HILL) { biome[i] = BIOME.HILLS; continue; }
+      if (t < 0.22) { biome[i] = BIOME.TUNDRA; continue; }
+      if (m < 0.26 && t > 0.45) { biome[i] = BIOME.DESERT; continue; }
+      if (m > 0.66 && coastDist[i] <= 2) { biome[i] = BIOME.MARSH; continue; }
+      if (m > 0.52) { biome[i] = BIOME.FOREST; continue; }
+      biome[i] = BIOME.PASTURE;
+    }
+
+    // ── THE WINDS OF MAGIC — one mana field, no affinities (§II, revised) ─
+    // There is no "type" of magic in a place. Mana is a single fuel that
+    // blows across the world and pools unevenly: broad drifting pockets of
+    // strong and weak wind, punctuated by a few concentrated WELLS. The field
+    // has its OWN noise — the land only lightly stirs it (rugged, high-energy
+    // ground ruffles the wind a touch; deep open ocean a touch less). The
+    // terrain does not pick a flavour; it just makes the wind gust or lull.
+    const mana = new Float32Array(N);
+    const nWind = fbmFactory(makeNoise(seed * 29 + 13));
+    // a handful of seeded wells — concentrated founts the wind gathers around
+    const wellRnd = mulberry32(seed * 41 + 19);
+    const WELLS = [];
+    const N_WELLS = 5;
+    for (let k = 0; k < N_WELLS; k++) {
+      WELLS.push({ x: 0.10 + 0.80 * wellRnd(), y: 0.10 + 0.80 * wellRnd(), rad: 0.055 + 0.065 * wellRnd(), str: 0.55 + 0.45 * wellRnd() });
+    }
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = idx(c, r);
+      const nx = c / cols, ny = (r + 0.5 * (c & 1)) / rows;
+      // broad wind: low-frequency fBm → big soft pockets of high & low mana
+      let w = nWind(nx * 2.1 + 3, ny * 2.1 + 6, 3) * 0.66
+            + nWind(nx * 4.4 + 9, ny * 4.4 + 1, 2) * 0.22;
+      // wells: concentrated gaussian founts riding on top of the wind
+      for (const wl of WELLS) w += wl.str * gauss(nx, ny, wl.x, wl.y, wl.rad, wl.rad);
+      // the land only ruffles the wind — a gust over rugged ground, a lull
+      // over the deep — never a flavour. (kept small on purpose.)
+      w += 0.10 * Math.min(1, slope[i] * 6) + (isLand(i) ? 0.03 : -0.05);
+      mana[i] = w;
+    }
+    // normalise across the WHOLE world → [0,1] (the wind blows over sea too)
+    (function normMana() {
+      let mn = Infinity, mx = -Infinity;
+      for (let i = 0; i < N; i++) { if (mana[i] < mn) mn = mana[i]; if (mana[i] > mx) mx = mana[i]; }
+      const d = mx - mn || 1;
+      for (let i = 0; i < N; i++) mana[i] = (mana[i] - mn) / d;
+    })();
+
+    // ── FEATURES: rivers (downhill trace) ───────────────────────────────
+    const rivers = [];
+    const srcRnd = mulberry32(seed * 31 + 7);
+    const candidates = [];
+    for (let i = 0; i < N; i++) if (isLand(i) && elevation[i] > 0.66 && moisture[i] > 0.5) candidates.push(i);
+    candidates.sort((a, b) => elevation[b] - elevation[a]);
+    const used = new Set();
+    let made = 0;
+    for (const start of candidates) {
+      if (made >= 9) break;
+      if (srcRnd() > 0.5) continue;
+      let c = start % cols, r = Math.floor(start / cols);
+      const pts = [[c, r]]; let guard = 0; let ok = true;
+      while (guard++ < 120) {
+        const i = idx(c, r);
+        if (!isLand(i)) break;             // reached the sea
+        let best = null, bestE = elevation[i];
+        for (const [nc, nr] of neighbours(c, r, cols, rows)) {
+          const e = elevation[idx(nc, nr)];
+          if (e < bestE) { bestE = e; best = [nc, nr]; }
+        }
+        if (!best) break;                  // local minimum (lake)
+        c = best[0]; r = best[1]; pts.push([c, r]);
+        if (used.has(idx(c, r))) { ok = pts.length > 6; break; }
+      }
+      if (ok && pts.length >= 5) { rivers.push({ points: pts, strength: 1 + Math.floor(pts.length / 14) }); pts.forEach(([pc, pr]) => used.add(idx(pc, pr))); made++; }
+    }
+
+    // ── FEATURES: the wells — where the wind gathers strongest (§VI) ─────
+    // The strongest pockets of the mana field, spaced apart. No type — just
+    // the deepest founts, ranked by how hard the wind blows there.
+    const manaOrder = [];
+    for (let i = 0; i < N; i++) manaOrder.push(i);
+    manaOrder.sort((a, b) => mana[b] - mana[a]);
+    const wells = [];
+    for (const i of manaOrder) {
+      const c = i % cols, r = Math.floor(i / cols);
+      if (wells.every((n) => Math.abs(n.q - c) + Math.abs(n.r - r) > 12)) {
+        wells.push({ q: c, r, intensity: +mana[i].toFixed(2) });
+      }
+      if (wells.length >= 3) break;
+    }
+
+    return {
+      meta: { seed, version: '0.2.0-design', grid: { cols, rows, orientation: 'flat-top', offset: 'odd-q' }, sea_level: sea, wells },
+      fields: { elevation, temperature, moisture, slope, biome, coastDist, mana },
+      features: { rivers, exceptions: [] },
+      BIOME, BIOME_NAME, idx, isLand,
+    };
+  }
+
+  global.AtlasCore = { generate, hexCenter, hexPolygon, mapPixelSize, neighbours, BIOME, BIOME_NAME };
+})(window);
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   THE GLYPH LIBRARY — Liber II Terrae
+   ─────────────────────────────────────────────────────────────────────
+   One <symbol> per landform/landcover, authored in a 24×24 box, in the
+   "confident engraver" hand: bold, rounded, OPEN linework. No fills, no
+   baked colour — every stroke inherits `currentColor` + the group's
+   stroke-width, so Design re-themes the whole atlas from one CSS rule and
+   Claude Code places each by <use href="#g-…">. (§VI: glyphs as symbols.)
+
+   Coordinate space 0–24. Visual weight tuned to read down to ~12px hexes.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function (global) {
+  'use strict';
+
+  // inner markup only — stroke/fill inherited from the #glyphs group
+  const GLYPHS = {
+    // sharp twin summit with a snow notch
+    peak:
+      '<path d="M3.5 20 L9.5 6.5 L13.5 14"/>' +
+      '<path d="M11 18.5 L16 7 L20.5 20"/>' +
+      '<path d="M13.6 11.3 L16 8.4 L18.4 11.3" stroke-opacity="0.55"/>',
+    // rounded massif, two ridgelines
+    mountain:
+      '<path d="M2.5 19.5 L9 9 L13.5 16"/>' +
+      '<path d="M11 18 L16.5 9.5 L21.5 19.5"/>',
+    // gentle rolling bumps — domes sitting ON a ground line (not floating
+    // arcs, which read as birds). Z closes each arc back along its base.
+    hills:
+      '<path d="M3 16.5 Q7.5 11 12 16.5 Z"/>' +
+      '<path d="M11 17 Q15 12.5 19.5 17 Z"/>',
+    // a fir — stem + two open canopy chevrons
+    forest:
+      '<path d="M12 20 L12 12.5"/>' +
+      '<path d="M7 13 L12 6 L17 13"/>' +
+      '<path d="M8.5 16.5 L12 11.5 L15.5 16.5"/>',
+    // pasture — three blades of grass
+    pasture:
+      '<path d="M7 18.5 Q6.5 13.5 8.5 11.5"/>' +
+      '<path d="M12 19 Q12 12.5 12 10.5"/>' +
+      '<path d="M17 18.5 Q17.5 13.5 15.5 11.5"/>',
+    // dunes — long, low, asymmetric desert swells with a wind ripple
+    dune:
+      '<path d="M2 16.5 Q7 12.5 12.5 16.5"/>' +
+      '<path d="M11.5 17.5 Q16 14 21.5 17.5"/>' +
+      '<path d="M5.5 19.5 Q8.5 18.2 11.5 19.5" stroke-opacity="0.5"/>',
+    // marsh — reeds rising from a waterline
+    marsh:
+      '<path d="M5 19 Q12 16.5 19 19"/>' +
+      '<path d="M8 18.5 L8 9.5"/><path d="M8 9.5 Q9.5 10.5 8 12" stroke-opacity="0.7"/>' +
+      '<path d="M12.5 19 L12.5 7.5"/><path d="M12.5 7.5 Q14.2 8.6 12.5 10.4" stroke-opacity="0.7"/>' +
+      '<path d="M16.5 18.5 L16.5 10"/><path d="M16.5 10 Q18 11 16.5 12.6" stroke-opacity="0.7"/>',
+    // open sea swell — sparse, placed on only some ocean hexes
+    wave:
+      '<path d="M3.5 13.5 Q7 9.5 10.5 13.5 T17.5 13.5" stroke-opacity="0.8"/>',
+    // tundra — sparse frost crosses
+    tundra:
+      '<path d="M9 12 L9 16 M7 14 L11 14" stroke-opacity="0.7"/>' +
+      '<path d="M16 9.5 L16 13.5 M14 11.5 L18 11.5" stroke-opacity="0.55"/>',
+    // coast — a dotted strand
+    coast:
+      '<path d="M6 14.5 L6.4 14.5" stroke-linecap="round"/>' +
+      '<path d="M11 16 L11.4 16" stroke-linecap="round"/>' +
+      '<path d="M16 14.5 L16.4 14.5" stroke-linecap="round"/>',
+  };
+
+  // biome enum (matches AtlasCore) → glyph key
+  const BIOME_GLYPH = {
+    0: null,        // OCEAN (wave is stamped sparsely, handled by renderer)
+    1: 'coast',
+    2: 'marsh',
+    3: 'pasture',
+    4: 'forest',
+    5: 'hills',
+    6: 'mountain',
+    7: 'peak',
+    8: 'dune',
+    9: 'tundra',
+  };
+
+  // ordered list for the specimen sheet
+  const GLYPH_ORDER = [
+    ['peak', 'Peak', 'snow-crowned summit'],
+    ['mountain', 'Mountain', 'high stone'],
+    ['hills', 'Hills', 'rolling upland'],
+    ['forest', 'Forest', 'woodland cover'],
+    ['pasture', 'Pasture', 'open grassland'],
+    ['dune', 'Dune', 'arid desert'],
+    ['marsh', 'Marsh', 'fen & wetland'],
+    ['tundra', 'Tundra', 'frozen waste'],
+    ['coast', 'Coast', 'tidal strand'],
+    ['wave', 'Swell', 'open sea'],
+  ];
+
+  // build the <defs> block of <symbol>s (called once per SVG document)
+  function defs(prefix = 'g') {
+    let s = '';
+    for (const key in GLYPHS) {
+      s += `<symbol id="${prefix}-${key}" viewBox="0 0 24 24" overflow="visible">${GLYPHS[key]}</symbol>`;
+    }
+    return s;
+  }
+
+  global.AtlasGlyphs = { GLYPHS, BIOME_GLYPH, GLYPH_ORDER, defs };
+})(window);
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   THE RENDERER — world-state → exploitable SVG  (design prototype of the bake)
+   ─────────────────────────────────────────────────────────────────────
+   Layered semantic groups, glyphs placed by <use>, per-hex data-* and a
+   stable id — the document Astro can query and Design can restyle. Three
+   terrain channels (glyph / relief / hypso) and their stack, plus the
+   demoted magic layer: a few mana wells by default, an opt-in soft wash of
+   the Winds (one hue, intensity = strength). Channel & magic are the live
+   dials. (§VI, §VII.)
+   ═══════════════════════════════════════════════════════════════════════ */
+(function (global) {
+  'use strict';
+  const { hexCenter, hexPolygon, mapPixelSize, neighbours, BIOME } = global.AtlasCore;
+  const { BIOME_GLYPH, defs } = global.AtlasGlyphs;
+
+  // ── the codex palette (aged-atlas) ───────────────────────────────────
+  const PAL = {
+    sea:    '#bcd4dc',     // duck-egg shallow sea (the §VI ground)
+    seaDeep:'#9cbcc8',
+    land:   '#e8d9b8',     // parchment
+    coast:  '#6b5130',     // coastline emphasis
+    river:  '#5d8aa0',
+    ink:    '#2a2418',     // glyph engraving
+    // stepped hypsometric ramp — muted, aged
+    seaRamp:  ['#7fa6b4', '#9cc0cb', '#bcd4dc'],                 // deep→shallow
+    landRamp: ['#9fae72', '#bcbd80', '#cdbd84', '#c8a463',      // low→high
+               '#b88a52', '#9c7146', '#b6a487', '#efe7d4'],
+  };
+  // the Winds of Magic — ONE arcane hue (no schools, no affinity). Weak
+  // pockets read as a faint stain; strong wells glow toward the bright core.
+  const MANA    = '#6a5a9c';   // arcane violet — the wind at rest
+  const MANA_HI = '#9079d6';   // luminous core of a strong pocket
+  // soft per-biome tint, blended lightly into the parchment so regions
+  // read by colour even when glyphs are sparse (keys match BIOME enum)
+  const BIOME_TINT = {
+    1: '#e0d2a8',  // coast (subtle beach — close to parchment)
+    2: '#9fb39a',  // marsh
+    3: '#c2c585',  // pasture
+    4: '#8ba869',  // forest
+    5: '#cbb079',  // hills
+    6: '#b3a288',  // mountain
+    7: '#ece7da',  // peak
+    8: '#dcc488',  // desert
+    9: '#d2dadb',  // tundra
+  };
+
+  const lerpHex = (a, b, t) => {
+    const pa = [parseInt(a.slice(1, 3), 16), parseInt(a.slice(3, 5), 16), parseInt(a.slice(5, 7), 16)];
+    const pb = [parseInt(b.slice(1, 3), 16), parseInt(b.slice(3, 5), 16), parseInt(b.slice(5, 7), 16)];
+    const c = pa.map((v, i) => Math.round(v + (pb[i] - v) * t));
+    return '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('');
+  };
+
+  // blend a hex colour toward black/white by a signed amount (-1..1)
+  function shadeColor(hex, amt) {
+    if (amt === 0) return hex;
+    return amt < 0 ? lerpHex(hex, '#23190d', Math.min(0.5, -amt)) : lerpHex(hex, '#fffaf0', Math.min(0.45, amt));
+  }
+
+  function render(world, opts) {
+    const o = Object.assign({ channel: 'glyph', hexSize: 9, pad: 8, magic: 'nodes', coast: true, prefix: 'g', glyphScale: 0.92, glyphBlock: 2 }, opts);
+    const { cols, rows } = world.meta.grid;
+    const sea = world.meta.sea_level;
+    const F = world.fields;
+    const idx = (c, r) => r * cols + c;
+    const s = o.hexSize;
+    const [W, H] = mapPixelSize(cols, rows, s, o.pad);
+
+    // precompute centers
+    const cx = new Float32Array(cols * rows), cy = new Float32Array(cols * rows);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const [x, y] = hexCenter(c, r, s, o.pad); cx[idx(c, r)] = x; cy[idx(c, r)] = y;
+    }
+
+    // ── per-hex hillshade (cheap aspect lighting, quantised) ────────────
+    function shade(i, c, r) {
+      let gx = 0, gy = 0; const e = F.elevation[i];
+      for (const [nc, nr] of neighbours(c, r, cols, rows)) {
+        const ni = idx(nc, nr);
+        const dx = cx[ni] - cx[i], dy = cy[ni] - cy[i];
+        const len = Math.hypot(dx, dy) || 1;
+        const de = F.elevation[ni] - e;        // uphill if >0
+        gx += (dx / len) * de; gy += (dy / len) * de;
+      }
+      const mag = Math.hypot(gx, gy);
+      if (mag < 1e-4) return 0;
+      // light from upper-left (screen up = -y)
+      const dot = (gx / mag) * (-0.7) + (gy / mag) * (-0.7);
+      return Math.max(-1, Math.min(1, -dot * Math.min(1, mag * 6))); // + = lit, − = shadow
+    }
+
+    // ── channel fill for a hex (shading baked in — no overlay layer) ─────
+    const useRelief = (o.channel === 'relief' || o.channel === 'stack');
+    const useTint  = (o.channel === 'glyph' || o.channel === 'relief');
+    function baseFill(i, c, r) {
+      const e = F.elevation[i], land = e > sea, b = F.biome[i];
+      let col;
+      if (o.channel === 'hypso' || o.channel === 'stack') {
+        if (!land) { const t = Math.min(1, (sea - e) / sea); col = PAL.seaRamp[Math.min(2, Math.floor((1 - t) * 3))]; }
+        else { const a = (e - sea) / (1 - sea); col = PAL.landRamp[Math.min(PAL.landRamp.length - 1, Math.floor(a * PAL.landRamp.length))]; }
+      } else if (!land) {
+        const t = Math.min(1, (sea - e) / sea);          // deeper sea reads darker
+        col = lerpHex(PAL.sea, PAL.seaDeep, Math.min(1, t * 1.3));
+      } else {
+        // soft parchment + gentle biome identity
+        col = useTint && BIOME_TINT[b] ? lerpHex(PAL.land, BIOME_TINT[b], 0.42) : PAL.land;
+      }
+      if (useRelief && land) col = shadeColor(col, shade(i, c, r) * 0.55);
+      return col;
+    }
+
+    const poly = (i) => hexPolygon(cx[i], cy[i], s).map((p) => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+
+    // shared-edge coastline: for a land hex, draw only the hex edges that
+    // face the sea — the segments join into one continuous, smooth coast
+    // (no chunky per-hex hexagon outlines).
+    function coastEdges(c, r, i) {
+      const verts = hexPolygon(cx[i], cy[i], s);
+      let d = '';
+      const dirs = [];
+      for (const [nc, nr] of neighbours(c, r, cols, rows)) dirs.push([nc, nr, cx[idx(nc, nr)] - cx[i], cy[idx(nc, nr)] - cy[i], F.elevation[idx(nc, nr)] <= sea]);
+      for (let j = 0; j < 6; j++) {
+        const a = verts[j], bb = verts[(j + 1) % 6];
+        const mx = (a[0] + bb[0]) / 2 - cx[i], my = (a[1] + bb[1]) / 2 - cy[i];
+        const ml = Math.hypot(mx, my) || 1;
+        // is the neighbour across this edge sea (or off-grid)?
+        let best = null, bestDot = -2;
+        for (const nb of dirs) { const nl = Math.hypot(nb[2], nb[3]) || 1; const dot = (mx / ml) * (nb[2] / nl) + (my / ml) * (nb[3] / nl); if (dot > bestDot) { bestDot = dot; best = nb; } }
+        const seaSide = !best || bestDot < 0.5 ? true : best[4]; // off-grid edge → coast
+        if (seaSide) d += `M${a[0].toFixed(1)} ${a[1].toFixed(1)} L${bb[0].toFixed(1)} ${bb[1].toFixed(1)} `;
+      }
+      return d;
+    }
+
+    // ── build layered groups ────────────────────────────────────────────
+    let terrain = '', coast = '', rivers = '', glyphs = '', wellMarks = '', manaWash = '';
+    const useGlyphs = (o.channel === 'glyph' || o.channel === 'relief' || o.channel === 'stack');
+
+    // pass 1 — base terrain (one polygon per hex) + coast + mana wash
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const i = idx(c, r);
+        const e = F.elevation[i], land = e > sea, b = F.biome[i];
+        const pts = poly(i);
+        const mv = F.mana[i];
+        terrain += `<polygon class="hx ${land ? 'land' : 'sea'}" points="${pts}" fill="${baseFill(i, c, r)}" data-q="${c}" data-r="${r}" data-biome="${world.BIOME_NAME[b]}" data-mana="${mv.toFixed(2)}"/>`;
+        if (o.coast && land) {
+          let edge = false;
+          for (const [nc, nr] of neighbours(c, r, cols, rows)) if (F.elevation[idx(nc, nr)] <= sea) { edge = true; break; }
+          if (edge) coast += coastEdges(c, r, i);
+        }
+        if (o.magic === 'wash' && mv > 0.12) {
+          // the wind blows over sea and land alike; strength = opacity & glow
+          const col = lerpHex(MANA, MANA_HI, Math.max(0, (mv - 0.5) * 2));
+          manaWash += `<polygon points="${pts}" fill="${col}" fill-opacity="${(0.03 + mv * 0.42).toFixed(3)}"/>`;
+        }
+      }
+    }
+
+    // pass 2 — SPARSE glyphs: only FEATURE terrain gets a mark; plains,
+    // grassland & tundra read by their soft tint alone (less noise, more
+    // like a hand-engraved atlas). One legible mark per block by majority.
+    if (useGlyphs) {
+      // ONE density knob (0..100): denser → smaller blocks, lower dominance
+      // threshold, and more terrain types earn a mark. (Falls back to the
+      // older glyphBlock if density isn't supplied.)
+      const density = (o.density != null) ? Math.max(0, Math.min(100, o.density))
+                    : (6 - Math.max(1, o.glyphBlock)) / 4 * 100;
+      const dN = density / 100;
+      const B = Math.max(2, Math.min(6, Math.round(6 - dN * 4)));   // 100→2, 0→6
+      const needFrac = 0.42 - dN * 0.26;                            // looser when denser
+      const gSize = s * (1.05 + B * 0.55) * o.glyphScale;          // grows with block
+      const HIGHLAND = { 5: 1, 6: 2, 7: 3 };                        // prefer tallest member
+      // feature set widens as density climbs: landmarks → + hills → + dunes → + grass/tundra
+      const FEATURE = { 2: 1, 4: 1, 6: 1, 7: 1 };                   // marsh, forest, mountain, peak
+      if (dN >= 0.30) FEATURE[5] = 1;                               // + hill country
+      if (dN >= 0.62) FEATURE[8] = 1;                               // + dunes
+      if (dN >= 0.82) { FEATURE[3] = 1; FEATURE[9] = 1; }           // + grassland & tundra texture
+      for (let br = 0; br < rows; br += B) {
+        for (let bc = 0; bc < cols; bc += B) {
+          const tally = {}; let landN = 0, oceanN = 0;
+          let repI = -1, repScore = -1;
+          for (let r = br; r < Math.min(rows, br + B); r++) {
+            for (let c = bc; c < Math.min(cols, bc + B); c++) {
+              const i = idx(c, r), b = F.biome[i];
+              if (F.elevation[i] > sea) {
+                landN++; if (FEATURE[b]) tally[b] = (tally[b] || 0) + 1;
+              } else { oceanN++; }
+            }
+          }
+          const hasFeature = Object.keys(tally).length > 0;
+          if (landN >= Math.max(1, (B * B) * 0.34) && hasFeature) {
+            // dominant FEATURE biome in the block (plains are skipped above)
+            let domB = -1, domC = -1;
+            for (const k in tally) if (tally[k] > domC) { domC = tally[k]; domB = +k; }
+            // require the feature to genuinely DOMINATE the block, so a lone
+            // peak in a plain doesn't speckle the lowland — marks cluster into
+            // real ranges & woods. (peaks are rare, so allow them more easily.)
+            const need = (domB === 7) ? Math.max(1, B * 0.7) : Math.max(2, (B * B) * needFrac);
+            if (domC < need) {
+              if (oceanN > 0 && ((bc / B + br / B) % 4 === 0)) {
+                const ci2 = idx(Math.min(cols - 1, bc + (B >> 1)), Math.min(rows - 1, br + (B >> 1)));
+                if (F.elevation[ci2] < sea - 0.05) glyphs += `<use href="#${o.prefix}-wave" x="${(cx[ci2] - gSize / 2).toFixed(1)}" y="${(cy[ci2] - gSize / 2).toFixed(1)}" width="${gSize.toFixed(1)}" height="${gSize.toFixed(1)}"/>`;
+              }
+              continue;
+            }
+            // representative hex: tallest if highland, else most-central of domB
+            for (let r = br; r < Math.min(rows, br + B); r++) {
+              for (let c = bc; c < Math.min(cols, bc + B); c++) {
+                const i = idx(c, r);
+                if (F.elevation[i] <= sea || F.biome[i] !== domB) continue;
+                const score = (HIGHLAND[domB] ? F.elevation[i] * 10 : 5 - (Math.abs(c - bc - B / 2) + Math.abs(r - br - B / 2)));
+                if (score > repScore) { repScore = score; repI = i; }
+              }
+            }
+            const key = BIOME_GLYPH[domB];
+            if (repI >= 0 && key) glyphs += `<use href="#${o.prefix}-${key}" x="${(cx[repI] - gSize / 2).toFixed(1)}" y="${(cy[repI] - gSize / 2).toFixed(1)}" width="${gSize.toFixed(1)}" height="${gSize.toFixed(1)}"/>`;
+          } else if (oceanN > 0 && ((bc / B + br / B) % 4 === 0)) {
+            // very sparse open-sea swell
+            const ci = idx(Math.min(cols - 1, bc + (B >> 1)), Math.min(rows - 1, br + (B >> 1)));
+            if (F.elevation[ci] < sea - 0.05) glyphs += `<use href="#${o.prefix}-wave" x="${(cx[ci] - gSize / 2).toFixed(1)}" y="${(cy[ci] - gSize / 2).toFixed(1)}" width="${gSize.toFixed(1)}" height="${gSize.toFixed(1)}"/>`;
+          }
+        }
+      }
+    }
+
+    // rivers
+    if (o.channel !== 'hypso' || true) {
+      for (const rv of world.features.rivers) {
+        const d = rv.points.map(([c, r], k) => (k ? 'L' : 'M') + cx[idx(c, r)].toFixed(1) + ' ' + cy[idx(c, r)].toFixed(1)).join(' ');
+        rivers += `<path d="${d}" fill="none" stroke="${PAL.river}" stroke-width="${(s * 0.18 * rv.strength).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.85"/>`;
+      }
+    }
+
+    // mana wells (the strongest pockets of the wind) — scaled by intensity
+    if (o.magic !== 'off') {
+      for (const n of world.meta.wells) {
+        const i = idx(n.q, n.r);
+        const x = cx[i], y = cy[i], rr = s * (1.05 + 0.95 * n.intensity);
+        wellMarks +=
+          `<g class="well" data-intensity="${n.intensity}">` +
+          `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rr.toFixed(1)}" fill="none" stroke="${MANA}" stroke-width="${(s * 0.12).toFixed(2)}" stroke-opacity="0.42"/>` +
+          `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(rr * 0.55).toFixed(1)}" fill="none" stroke="${MANA}" stroke-width="${(s * 0.12).toFixed(2)}" stroke-opacity="0.72"/>` +
+          `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(s * 0.32).toFixed(1)}" fill="${MANA_HI}"/>` +
+          `</g>`;
+      }
+    }
+
+    const frame = `<rect x="0.5" y="0.5" width="${(W - 1).toFixed(1)}" height="${(H - 1).toFixed(1)}" fill="none" stroke="#6b5130" stroke-opacity="0.45" stroke-width="1"/>`;
+
+    const gStroke = Math.max(1.3, s * 0.16);
+    const svg =
+      `<svg class="atlas-svg" viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">` +
+      `<defs>${defs(o.prefix)}</defs>` +
+      `<rect width="${W.toFixed(1)}" height="${H.toFixed(1)}" fill="${PAL.sea}"/>` +
+      `<g id="${o.prefix}-terrain">${terrain}</g>` +
+      `<g id="${o.prefix}-mana" style="mix-blend-mode:multiply">${manaWash}</g>` +
+      `<g id="${o.prefix}-rivers">${rivers}</g>` +
+      `<g id="${o.prefix}-coast"><path d="${coast}" fill="none" stroke="${PAL.coast}" stroke-opacity="0.5" stroke-width="${Math.max(1, s * 0.12).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/></g>` +
+      `<g id="${o.prefix}-glyphs" fill="none" stroke="${PAL.ink}" stroke-width="${gStroke.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.85">${glyphs}</g>` +
+      `<g id="${o.prefix}-wells">${wellMarks}</g>` +
+      frame +
+      `</svg>`;
+    return { svg, width: W, height: H };
+  }
+
+  global.AtlasRender = { render, PAL, MANA, MANA_HI, lerpHex };
+})(window);
+
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── nav scroll effect ──
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 80), {passive:true});
+
+  // ── reveal on scroll ──
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.1, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ── smooth anchor scroll ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+
+  // ── hex tooltip ──
+  const tip = document.getElementById('hex-tip');
+  const tipBiome = document.getElementById('tip-biome');
+  const tipCoords = document.getElementById('tip-coords');
+  const tipMana = document.getElementById('tip-mana');
+  const BIOME_LABEL = {ocean:'Open Ocean',coast:'Coastline',marsh:'Fen & Marsh',pasture:'Pasture',forest:'Woodland',hills:'Hill Country',mountain:'Mountains',peak:'High Peaks',desert:'Desert',tundra:'Tundra'};
+  function attachHover(svg) {
+    if (!svg) return;
+    svg.addEventListener('mousemove', e => {
+      const el = e.target.closest('[data-biome]');
+      if (!el) { tip.classList.remove('visible'); return; }
+      tipBiome.textContent = BIOME_LABEL[el.dataset.biome] || el.dataset.biome;
+      tipCoords.textContent = `q ${el.dataset.q}  r ${el.dataset.r}`;
+      tipMana.textContent = `mana  ${(+el.dataset.mana * 100).toFixed(0)}%`;
+      tip.classList.add('visible');
+      tip.style.left = (e.clientX + 16) + 'px';
+      tip.style.top = (e.clientY - 10) + 'px';
+    });
+    svg.addEventListener('mouseleave', () => tip.classList.remove('visible'));
+  }
+
+  // ── channel / magic labels ──
+  const CH_LABEL = {glyph:'glyphs',relief:'relief + glyphs',hypso:'hypsometric',stack:'full stack'};
+  const MG_LABEL = {nodes:'wells',wash:'winds',off:'hidden'};
+
+  // ── world state (generated once, re-rendered on control changes) ──
+  let world = null;
+  let currentSeed = 73;
+
+  function generate(seed) {
+    currentSeed = seed;
+    document.getElementById('living-seed-label').textContent = 'Terra · seed ' + seed;
+    world = AtlasCore.generate({seed, cols:96, rows:60});
+  }
+
+  function renderLiving() {
+    if (!world) return;
+    const channel = document.getElementById('ctl-channel').value;
+    const magic = document.getElementById('ctl-magic').value;
+    const density = +document.getElementById('ctl-density').value;
+    const coast = document.getElementById('ctl-coast').checked;
+    const {svg} = AtlasRender.render(world, {channel, magic, density, coast, hexSize:9, pad:8, prefix:'lv'});
+    document.getElementById('living-plate').innerHTML = svg;
+    document.getElementById('living-cur').textContent = 'channel: ' + CH_LABEL[channel] + ' · magic: ' + MG_LABEL[magic];
+    attachHover(document.getElementById('living-plate').querySelector('svg'));
+  }
+
+  // ── static direction plates ──
+  const PLATES = [
+    {channel:'glyph',   magic:'off',   rn:'I',   nm:'Glyphs',      note:'Parchment + soft biome tint + engraved marks. The aged-atlas look — terrain reads by glyph clusters, not colour gradients.', coast:true},
+    {channel:'relief',  magic:'off',   rn:'II',  nm:'Relief',       note:'Hillshade baked into each hex fill. Light from upper-left. Mountains cast shadows; valleys catch light. No overlay layer.', coast:true},
+    {channel:'hypso',   magic:'nodes', rn:'III', nm:'Hypsometric',  note:'Stepped colour ramp from deep sea to high peak. Wells visible. The clearest read of elevation and the Winds at once.', coast:true},
+  ];
+
+  function buildDirectionPlates() {
+    const grid = document.getElementById('dir-grid');
+    const frags = PLATES.map((p, i) => {
+      const {svg} = AtlasRender.render(world, {channel:p.channel, magic:p.magic, coast:p.coast, density:55, hexSize:7, pad:6, prefix:'d'+i});
+      const stat = world.meta.grid.cols + '×' + world.meta.grid.rows + ' hex grid · seed ' + currentSeed;
+      return `<div class="plate parchment">
+        <div class="plate-hd"><span class="rn">${p.rn}</span><span class="nm">${p.nm}</span></div>
+        ${svg}
+        <p class="note">${p.note}</p>
+        <div class="foot"><span class="stat">${stat}</span></div>
+      </div>`;
+    });
+    grid.innerHTML = frags.join('');
+    attachHover(grid.querySelector('svg'));
+  }
+
+  // ── glyph specimen ──
+  function buildGlyphSheet() {
+    const defsEl = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    defsEl.setAttribute('width','0');defsEl.setAttribute('height','0');defsEl.style.position='absolute';
+    defsEl.innerHTML = '<defs>' + AtlasGlyphs.defs('gs') + '</defs>';
+    document.body.appendChild(defsEl);
+    const grid = document.getElementById('glyph-grid');
+    grid.innerHTML = AtlasGlyphs.GLYPH_ORDER.map(([key,name,desc]) =>
+      `<div class="gtile vellum"><div class="gbox"><svg class="spec" viewBox="0 0 24 24"><use href="#gs-${key}"/></svg></div><div class="gn">${name}</div><div class="gd">${desc}</div></div>`
+    ).join('');
+  }
+
+  // ── controls wiring ──
+  document.getElementById('btn-roll').addEventListener('click', () => {
+    const seed = Math.floor(Math.random() * 999999) + 1;
+    document.getElementById('ctl-seed').value = seed;
+    generate(seed);
+    buildDirectionPlates();
+    renderLiving();
+  });
+
+  document.getElementById('btn-generate').addEventListener('click', () => {
+    const seed = parseInt(document.getElementById('ctl-seed').value, 10) || 73;
+    generate(seed);
+    buildDirectionPlates();
+    renderLiving();
+  });
+
+  // live re-render on render-only controls (no world regen)
+  ['ctl-channel','ctl-magic','ctl-coast'].forEach(id => {
+    document.getElementById(id).addEventListener('change', renderLiving);
+  });
+  document.getElementById('ctl-density').addEventListener('input', () => {
+    document.getElementById('ctl-density-val').textContent = document.getElementById('ctl-density').value;
+    renderLiving();
+  });
+
+  // ── init ──
+  generate(73);
+  buildGlyphSheet();
+  buildDirectionPlates();
+  renderLiving();
+})();
+</script>
+</body>
+</html>

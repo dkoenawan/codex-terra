@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Liber II — The Cartographer's Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/codex.css" />
+<style>
+  /* ── page-local layout for the atlas brief ── */
+  .mono { font-family: "JetBrains Mono", monospace; }
+  .atlas-hero { position: relative; text-align: center; padding: 132px 20px 56px; }
+  .atlas-hero .eyebrow { display:inline-flex; align-items:center; gap:14px; font-family:var(--f-display); font-size:12px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+  .atlas-hero .eyebrow::before, .atlas-hero .eyebrow::after { content:""; width:42px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+  .atlas-hero h1 { font-size: clamp(38px, 6.4vw, 78px); color: var(--parchment); letter-spacing:.04em; line-height:1.02; }
+  .atlas-hero .tagline { font-family:var(--f-script); font-style:italic; font-size:clamp(18px,2.2vw,24px); color:var(--parchment); opacity:.74; max-width:620px; margin:22px auto 0; }
+  .atlas-hero .meta { display:flex; flex-wrap:wrap; gap:8px 30px; justify-content:center; margin-top:32px; font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--parchment); opacity:.55; letter-spacing:.02em; }
+  .atlas-hero .meta b { color:var(--gold); font-weight:500; }
+
+  /* desk note */
+  .desk { max-width: 880px; margin: 0 auto; }
+  .desk-note { position:relative; padding: 30px 34px; }
+  .desk-note .from { font-family:var(--f-display); font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--accent-ink); }
+  .desk-note p { color:var(--ink-soft); font-size:16.5px; margin-top:12px; line-height:1.6; }
+  .desk-note p strong { color:var(--crimson); }
+  .desk-note .decisions { list-style:none; padding:0; margin:18px 0 0; display:grid; gap:9px; }
+  .desk-note .decisions li { display:flex; gap:12px; align-items:baseline; font-size:15.5px; color:var(--ink-soft); }
+  .desk-note .decisions .d { font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-ink); white-space:nowrap; min-width:96px; }
+  .desk-note .decisions b { color:var(--ink); font-weight:600; }
+
+  /* atlas plates */
+  .atlas-svg { width:100%; height:auto; display:block; border-radius:2px; box-shadow: 0 10px 30px -18px rgba(0,0,0,.6); }
+  .dir-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  @media (max-width: 1040px){ .dir-grid { grid-template-columns:1fr; max-width:620px; margin:0 auto; } }
+  .plate { padding: 20px 20px 18px; cursor:pointer; transition: transform .35s var(--ease), box-shadow .35s var(--ease); }
+  .plate:hover { transform: translateY(-4px); }
+  .plate .plate-hd { display:flex; align-items:baseline; gap:12px; margin-bottom:14px; }
+  .plate .rn { font-family:var(--f-display); font-weight:600; font-size:13px; letter-spacing:.14em; color:var(--accent-ink); }
+  .plate .nm { font-family:var(--f-display); font-size:19px; letter-spacing:.04em; color:var(--ink); }
+  .plate .note { font-family:var(--f-script); font-style:italic; font-size:15px; color:var(--ink-soft); margin-top:13px; line-height:1.45; }
+  .plate .foot { display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:11px; border-top:1px solid rgba(120,90,40,.25); }
+  .plate .stat { font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.06em; color:var(--ink-soft); opacity:.8; }
+  .plate .open { font-family:var(--f-display); font-size:9.5px; letter-spacing:.3em; text-transform:uppercase; color:var(--accent-ink); display:inline-flex; gap:7px; align-items:center; }
+  .plate .open::after { content:"→"; transition:transform .3s; }
+  .plate:hover .open::after { transform:translateX(4px); }
+
+  /* living plate */
+  .living-wrap { position:relative; padding: 22px; }
+  .living-hd { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:16px; }
+  .living-hd .lt { font-family:var(--f-display); font-size:16px; letter-spacing:.05em; color:var(--ink); }
+  .living-hd .cur { font-family:"JetBrains Mono", monospace; font-size:11px; color:var(--accent-ink); letter-spacing:.04em; }
+  .hint { font-family:var(--f-script); font-style:italic; font-size:14.5px; color:var(--parchment); opacity:.6; text-align:center; margin-top:18px; }
+  .hint .kbd { font-family:"JetBrains Mono",monospace; font-style:normal; font-size:11px; color:var(--gold); border:1px solid var(--navy-line); padding:2px 7px; border-radius:3px; }
+
+  /* glyph specimen */
+  .glyph-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  @media (max-width: 880px){ .glyph-grid { grid-template-columns:repeat(3,1fr); } }
+  @media (max-width: 520px){ .glyph-grid { grid-template-columns:repeat(2,1fr); } }
+  .gtile { padding:18px 14px 14px; text-align:center; }
+  .gtile .gbox { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; }
+  .gtile svg.spec { width:64px; height:64px; color:var(--ink); }
+  .gtile svg.spec { fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .gtile .gn { font-family:var(--f-display); font-size:13px; letter-spacing:.06em; color:var(--ink); margin-top:8px; }
+  .gtile .gd { font-family:var(--f-script); font-style:italic; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+
+  /* palette */
+  .pal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:12px; }
+  .pchip { border:1px solid rgba(201,169,97,.18); }
+  .pchip .c { height:60px; }
+  .pchip .l { padding:9px 11px; background:rgba(255,255,255,.02); }
+  .pchip .l .n { font-family:var(--f-display); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--parchment); }
+  .pchip .l .h { font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--parchment); opacity:.5; margin-top:3px; }
+  .ramp { display:flex; height:34px; border:1px solid rgba(201,169,97,.18); overflow:hidden; }
+  .ramp i { flex:1; }
+
+  .triad-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:6px; }
+  @media (max-width:640px){ .triad-row{ grid-template-columns:repeat(2,1fr);} }
+  .triad { padding:18px 16px; border:1px solid rgba(201,169,97,.16); position:relative; }
+  .triad::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; }
+  .triad .mk { width:34px; height:34px; }
+  .triad .tn { font-family:var(--f-display); font-size:15px; letter-spacing:.05em; color:var(--parchment); margin-top:12px; }
+  .triad .ts { font-family:var(--f-script); font-style:italic; font-size:13.5px; color:var(--parchment); opacity:.62; margin-top:3px; }
+  .triad .tsub { font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.08em; color:var(--parchment); opacity:.42; margin-top:9px; text-transform:uppercase; }
+
+  .note-foot { max-width:760px; margin:54px auto 0; text-align:center; }
+  .note-foot .nt { font-family:var(--f-script); font-style:italic; font-size:16px; color:var(--parchment); opacity:.6; }
+</style>
+</head>
+<body data-domain="terrae">
+
+<!-- NAV -->
+<nav class="codex-nav">
+  <a class="brand" href="#top">Codex<span>·</span>Terra</a>
+  <div class="links">
+    <a href="#directions">Directions</a>
+    <a href="#living">The Plate</a>
+    <a href="#glyphs">Glyphs</a>
+    <a href="#palette">Palette</a>
+    <a href="#magic">Magic</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="atlas-hero" id="top">
+  <div class="eyebrow">Liber II · Terrae</div>
+  <h1>The Cartographer's Atlas</h1>
+  <p class="tagline">The visual system for the living map — drawn from one real world the engine conjured, that we might choose how the land should speak.</p>
+  <div class="meta">
+    <span><b>SEED</b> 73</span>
+    <span><b>GRID</b> flat-top · odd-q · continental</span>
+    <span><b>LEAN</b> glyphs over relief</span>
+    <span><b>WINDS</b> pockets · opt-in</span>
+  </div>
+  <div class="rule" style="margin-top:34px;"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+</header>
+
+<!-- DESK NOTE -->
+<section class="codex" style="padding-top:24px;">
+  <div class="desk">
+    <div class="parchment panel desk-note">
+      <div class="frame-deco tl"><svg viewBox="0 0 36 36" fill="none" stroke="#8a5a28" stroke-width="1.1"><path d="M4 14 V4 H14 M4 8 H10 V4"/></svg></div>
+      <div class="frame-deco tr"><svg viewBox="0 0 36 36" fill="none" stroke="#8a5a28" stroke-width="1.1"><path d="M4 14 V4 H14 M4 8 H10 V4"/></svg></div>
+      <div class="from">From the desk of Claude Design</div>
+      <p>This is the first plate of Liber II — not a mock, but a <strong>real continental world</strong> the engine drew at seed 73, rendered so you can judge how it should read. The land is computed first; the magic is a <strong>single field laid over it</strong> — the Winds, with no affinity — held back to a quiet layer, exactly as Opus set down. My job here is the one decision §VII left open — <strong>how the terrain is made legible</strong> — plus the glyph hand, the palette, and the manner of the magic.</p>
+      <ul class="decisions">
+        <li><span class="d">Lean</span><span>Glyphs as the type channel — <b>unambiguous landform &amp; cover</b> — laid optionally over hex-quantised relief so the land has form you can feel.</span></li>
+        <li><span class="d">Hand</span><span>A <b>confident engraver's line</b>: bold, rounded, open. Reads as texture at continental scale, as iconography up close.</span></li>
+        <li><span class="d">Ground</span><span>Duck-egg sea, parchment land — the aged-atlas palette, true to Liber I.</span></li>
+        <li><span class="d">Magic</span><span>The Winds blow everywhere, unevenly — a few strong <b>wells</b> by default; the mana field is <b>yours to summon</b> as a wash, never the base coat.</span></li>
+        <li><span class="d">Built to change</span><span>Channel and magic are <b>live dials</b> (open <span class="mono" style="font-size:12px">Tweaks</span>). Every colour is a hook, not a baked fill — re-theme without re-running the engine.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTIONS -->
+<section class="codex on-navy-deep" id="directions" style="background:var(--navy-deep); padding-top:90px;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="roman">I · The Choice</div>
+      <h2>Three Directions for the Land</h2>
+      <p class="sub">One world, drawn three ways. Pick the manner you like — each opens in the living plate below, where you can take it further.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="dir-grid" id="dir-grid">
+      <div class="plate vellum" data-channel="glyph" data-magic="nodes">
+        <div class="plate-hd"><span class="rn">I</span><span class="nm">The Engraver's Plate</span></div>
+        <div class="plate-body"></div>
+        <div class="note">Pure type. Glyphs stamped on a clean duck-egg sea — the most codex-like, the most legible by kind.</div>
+        <div class="foot"><span class="stat" data-stat></span><span class="open">Take it up</span></div>
+      </div>
+      <div class="plate vellum" data-channel="relief" data-magic="nodes">
+        <div class="plate-hd"><span class="rn">II</span><span class="nm">The Relief Atlas</span></div>
+        <div class="plate-body"></div>
+        <div class="note">Glyphs over hex-quantised shading. The ranges and valleys gain a body you can feel beneath the marks.</div>
+        <div class="foot"><span class="stat" data-stat></span><span class="open">Take it up</span></div>
+      </div>
+      <div class="plate vellum" data-channel="stack" data-magic="nodes">
+        <div class="plate-hd"><span class="rn">III</span><span class="nm">The Tinted Survey</span></div>
+        <div class="plate-body"></div>
+        <div class="note">The full stack — hypsometric tint, relief, glyphs and emphasised coast. Richest, most map-like.</div>
+        <div class="foot"><span class="stat" data-stat></span><span class="open">Take it up</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVING PLATE -->
+<section class="codex" id="living">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="roman">II · The Living Plate</div>
+      <h2>The Plate You Can Change</h2>
+      <p class="sub">The same world, yours to turn over. Flip the terrain channel and summon the magic — the dials that stay with us as the world evolves.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="vellum living-wrap">
+      <div class="frame-deco tl"><svg viewBox="0 0 36 36" fill="none" stroke="#8a5a28" stroke-width="1.1"><path d="M4 14 V4 H14 M4 8 H10 V4"/></svg></div>
+      <div class="frame-deco tr"><svg viewBox="0 0 36 36" fill="none" stroke="#8a5a28" stroke-width="1.1"><path d="M4 14 V4 H14 M4 8 H10 V4"/></svg></div>
+      <div class="frame-deco bl"><svg viewBox="0 0 36 36" fill="none" stroke="#8a5a28" stroke-width="1.1"><path d="M4 14 V4 H14 M4 8 H10 V4"/></svg></div>
+      <div class="frame-deco br"><svg viewBox="0 0 36 36" fill="none" stroke="#8a5a28" stroke-width="1.1"><path d="M4 14 V4 H14 M4 8 H10 V4"/></svg></div>
+      <div class="living-hd">
+        <span class="lt">Terra · seed 73</span>
+        <span class="cur" id="living-cur">channel: glyphs · magic: wells</span>
+      </div>
+      <div id="living-plate"></div>
+    </div>
+    <p class="hint">Open <span class="kbd">Tweaks</span> from the toolbar to change the channel &amp; the magic layer. Hover any hex on the page to read it.</p>
+  </div>
+</section>
+
+<!-- GLYPHS -->
+<section class="codex on-navy-deep" id="glyphs" style="background:var(--navy-deep);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="roman">III · The Hand</div>
+      <h2>The Glyph Library</h2>
+      <p class="sub">Each landform and cover, drawn once as a reusable symbol — the confident engraver's line. Restyle one rule, every hex follows.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="vellum panel" style="position:relative;">
+      <div class="glyph-grid" id="glyph-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PALETTE -->
+<section class="codex" id="palette">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="roman">IV · The Hooks</div>
+      <h2>Palette &amp; Channels</h2>
+      <p class="sub">Colours come from variables, never baked into fills — so the whole atlas re-themes from one place, the engine at rest.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+
+    <div class="specimen-label" style="font-family:var(--f-display); font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--parchment); opacity:.4; margin-bottom:14px;">Ground &amp; Ink</div>
+    <div class="pal-grid" style="margin-bottom:34px;">
+      <div class="pchip"><div class="c" style="background:#bcd4dc"></div><div class="l"><div class="n">Sea</div><div class="h">#bcd4dc</div></div></div>
+      <div class="pchip"><div class="c" style="background:#e8d9b8"></div><div class="l"><div class="n">Land</div><div class="h">#e8d9b8</div></div></div>
+      <div class="pchip"><div class="c" style="background:#6b5130"></div><div class="l"><div class="n">Coast</div><div class="h">#6b5130</div></div></div>
+      <div class="pchip"><div class="c" style="background:#5d8aa0"></div><div class="l"><div class="n">River</div><div class="h">#5d8aa0</div></div></div>
+      <div class="pchip"><div class="c" style="background:#2a2418"></div><div class="l"><div class="n">Glyph Ink</div><div class="h">#2a2418</div></div></div>
+      <div class="pchip"><div class="c" style="background:#6a5a9c"></div><div class="l"><div class="n">Mana</div><div class="h">#6a5a9c</div></div></div>
+    </div>
+
+    <div class="specimen-label" style="font-family:var(--f-display); font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--parchment); opacity:.4; margin-bottom:12px;">Hypsometric ramp · sea depth → summit</div>
+    <div class="ramp" style="margin-bottom:8px;">
+      <i style="background:#7fa6b4"></i><i style="background:#9cc0cb"></i><i style="background:#bcd4dc"></i>
+      <i style="background:#9fae72"></i><i style="background:#bcbd80"></i><i style="background:#cdbd84"></i><i style="background:#c8a463"></i><i style="background:#b88a52"></i><i style="background:#9c7146"></i><i style="background:#b6a487"></i><i style="background:#efe7d4"></i>
+    </div>
+    <div class="mono" style="font-size:10px; letter-spacing:.08em; color:var(--parchment); opacity:.4;">3 sea steps · 8 land bands — stepped, never smooth (pure exploitable SVG)</div>
+  </div>
+</section>
+
+<!-- MAGIC -->
+<section class="codex on-navy-deep" id="magic" style="background:var(--navy-deep);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="roman">V · The Quiet Layer</div>
+      <h2>The Winds of Magic</h2>
+      <p class="sub">The land speaks first. There is no affinity — magic is one fuel, the Winds, that blows across the whole world and pools unevenly. A few strong wells stand by default; the mana field itself is yours to summon as a wash.</p>
+      <div class="rule"><span class="l"></span><span class="d"></span><span class="r"></span></div>
+    </div>
+    <div class="triad-row" style="grid-template-columns:repeat(3,1fr);">
+      <div class="triad" style="--t:#6a5a9c;"><div class="mk"><svg viewBox="0 0 34 34" fill="none" stroke="#6a5a9c" stroke-width="1.6"><circle cx="17" cy="17" r="12"/><circle cx="17" cy="17" r="2" fill="#6a5a9c"/></svg></div><div class="tn">One Fuel</div><div class="ts">no schools, no flavour</div><div class="tsub">mana, not affinity</div></div>
+      <div class="triad" style="--t:#6a5a9c;"><div class="mk"><svg viewBox="0 0 34 34" fill="none" stroke="#6a5a9c" stroke-width="1.6"><path d="M4 22 Q11 12 17 18 T30 14"/><path d="M4 27 Q11 18 17 23 T30 20" opacity="0.55"/></svg></div><div class="tn">Pockets</div><div class="ts">broad drifting highs &amp; lows</div><div class="tsub">strong wind \u2194 dead calm</div></div>
+      <div class="triad" style="--t:#6a5a9c;"><div class="mk"><svg viewBox="0 0 34 34" fill="none" stroke="#6a5a9c" stroke-width="1.6"><circle cx="17" cy="17" r="12" stroke-opacity="0.45"/><circle cx="17" cy="17" r="6.5"/><circle cx="17" cy="17" r="2.5" fill="#9079d6" stroke="none"/></svg></div><div class="tn">Wells</div><div class="ts">where the wind gathers deepest</div><div class="tsub">the three strongest founts</div></div>
+    </div>
+    <style>.triad[style*="6a5a9c"]::before{background:#6a5a9c}</style>
+
+    <div class="specimen-label" style="font-family:var(--f-display); font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--parchment); opacity:.4; margin:40px 0 12px;">Mana intensity \u2014 the wash reads this and only this</div>
+    <div style="height:40px; border:1px solid rgba(201,169,97,.18); background:linear-gradient(90deg,#efe7d4,#cfc6e0 40%,#9d8cc8 72%,#6a5a9c 90%,#9079d6);"></div>
+    <div class="mono" style="display:flex; justify-content:space-between; font-size:10px; letter-spacing:.08em; color:var(--parchment); opacity:.45; margin-top:7px;"><span>dead calm</span><span>rising</span><span>roaring \u00b7 a well</span></div>
+
+    <div class="note-foot">
+      <p class="nt">Set the living plate's magic to <em>Winds</em> to see the wash: every hex stained by how hard the wind blows there — strong pockets glow, weak ones barely whisper. Hover any hex to read its mana.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="codex-foot">
+  <div class="sig">
+    <svg viewBox="0 0 80 80" fill="none" stroke="#c9a961" stroke-width="0.8"><circle cx="40" cy="40" r="32"/><polygon points="40,12 48,40 40,68 32,40"/><polygon points="12,40 40,32 68,40 40,48"/><circle cx="40" cy="40" r="3" fill="#c9a961"/></svg>
+  </div>
+  <div class="l1">Codex Terra · Liber II Terrae</div>
+  <div class="l2">The land, drawn that it might be known — and changed, as the world is.</div>
+  <div class="l3">— The Cartographer's Atlas —</div>
+</footer>
+
+<!-- hidden defs for glyph specimens -->
+<svg width="0" height="0" style="position:absolute" id="spec-defs" aria-hidden="true"></svg>
+
+<!-- engine + renderer (plain JS) -->
+<script src="atlas/atlas-core.js"></script>
+<script src="atlas/atlas-glyphs.js"></script>
+<script src="atlas/atlas-render.js"></script>
+<script src="assets/codex.js" defer></script>
+<script>
+(function () {
+  const COLS = 76, ROWS = 46;            // the world (seed 73)
+  // one real world, shown three ways below and in the living plate
+  const world = AtlasCore.generate({ seed: 73, cols: COLS, rows: ROWS, seaLevel: 0.36 });
+  window.__world = world;
+
+  const CH_LABEL = { glyph: 'glyphs', relief: 'relief + glyphs', hypso: 'hypsometric', stack: 'full stack' };
+  const MG_LABEL = { off: 'hidden', nodes: 'wells', wash: 'the winds' };
+
+  function countNodes(svg) { return svg.querySelectorAll('*').length; }
+
+  // ── hover-to-read a hex (demonstrates per-hex data-*) ──
+  let tip;
+  function ensureTip() {
+    if (tip) return tip;
+    tip = document.createElement('div');
+    tip.style.cssText = 'position:fixed;z-index:9998;pointer-events:none;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.02em;background:rgba(13,22,38,.94);color:#e8d9b8;border:1px solid rgba(201,169,97,.4);border-radius:4px;padding:7px 10px;opacity:0;transition:opacity .15s;box-shadow:0 8px 24px rgba(0,0,0,.4);';
+    document.body.appendChild(tip);
+    return tip;
+  }
+  function attachHover(svg) {
+    if (!svg) return;
+    const t = ensureTip();
+    svg.addEventListener('mousemove', (e) => {
+      const hx = e.target.closest('.hx');
+      if (!hx) { t.style.opacity = 0; return; }
+      const q = hx.getAttribute('data-q'), r = hx.getAttribute('data-r');
+      const b = hx.getAttribute('data-biome'), mv = parseFloat(hx.getAttribute('data-mana'));
+      const word = mv >= 0.78 ? 'roaring' : mv >= 0.55 ? 'strong' : mv >= 0.32 ? 'stirring' : mv >= 0.15 ? 'faint' : 'dead calm';
+      t.innerHTML = `q ${q} · r ${r}<br><span style="color:#c9a961">${b}</span> · mana <span style="color:#9079d6">${mv.toFixed(2)}</span> <span style="opacity:.7">${word}</span>`;
+      t.style.left = (e.clientX + 14) + 'px';
+      t.style.top = (e.clientY + 14) + 'px';
+      t.style.opacity = 1;
+    });
+    svg.addEventListener('mouseleave', () => { t.style.opacity = 0; });
+  }
+
+  // ── render the three direction plates ──
+  document.querySelectorAll('#dir-grid .plate').forEach((card) => {
+    const ch = card.getAttribute('data-channel');
+    const { svg } = AtlasRender.render(world, { channel: ch, hexSize: 7, pad: 6, magic: 'nodes', density: 70, prefix: 'd_' + ch });
+    const body = card.querySelector('.plate-body');
+    body.innerHTML = svg;
+    const el = body.querySelector('svg');
+    const stat = card.querySelector('[data-stat]');
+    if (stat) stat.textContent = COLS + '×' + ROWS + ' · seed 73';
+    card.addEventListener('click', () => {
+      if (window.__setTweak) { window.__setTweak({ channel: ch }); }
+      else { renderLiving({ channel: ch, magic: 'nodes', coast: true }); }
+      document.getElementById('living').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // ── living plate ──
+  let livingState = { channel: 'glyph', magic: 'nodes', coast: true, density: 70 };
+  function renderLiving(state) {
+    livingState = Object.assign({}, livingState, state);
+    const { svg } = AtlasRender.render(world, {
+      channel: livingState.channel, hexSize: 15, pad: 8,
+      magic: livingState.magic, coast: livingState.coast, density: livingState.density, prefix: 'live',
+    });
+    document.getElementById('living-plate').innerHTML = svg;
+    const cur = document.getElementById('living-cur');
+    if (cur) cur.textContent = 'channel: ' + CH_LABEL[livingState.channel] + ' · magic: ' + MG_LABEL[livingState.magic];
+    attachHover(document.getElementById('living-plate').querySelector('svg'));
+  }
+  window.applyAtlasTweaks = function (t) {
+    renderLiving({ channel: t.channel, magic: t.magic, coast: t.coast, density: t.density });
+  };
+  renderLiving(livingState);
+
+  // ── glyph specimen sheet ──
+  document.getElementById('spec-defs').innerHTML = AtlasGlyphs.defs('gs');
+  const grid = document.getElementById('glyph-grid');
+  grid.innerHTML = AtlasGlyphs.GLYPH_ORDER.map(([key, name, desc]) =>
+    `<div class="gtile vellum"><div class="gbox"><svg class="spec" viewBox="0 0 24 24"><use href="#gs-${key}"/></svg></div><div class="gn">${name}</div><div class="gd">${desc}</div></div>`
+  ).join('');
+
+  attachHover(document.querySelector('#dir-grid svg'));
+})();
+</script>
+
+<!-- React + Tweaks panel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="atlas/tweaks-panel.jsx"></script>
+<div id="tweaks-root"></div>
+<script type="text/babel">
+  const ATLAS_TWEAKS = /*EDITMODE-BEGIN*/{
+    "channel": "glyph",
+    "magic": "wash",
+    "coast": true,
+    "density": 59,
+    "glyphBlock": 3
+  }/*EDITMODE-END*/;
+
+  function AtlasTweaks() {
+    const [t, setTweak] = useTweaks(ATLAS_TWEAKS);
+    React.useEffect(() => { window.__setTweak = setTweak; }, [setTweak]);
+    React.useEffect(() => { if (window.applyAtlasTweaks) window.applyAtlasTweaks(t); }, [t]);
+    return (
+      <TweaksPanel title="Atlas Tweaks">
+        <TweakSection label="Terrain channel" />
+        <TweakSelect label="Channel" value={t.channel}
+          options={[
+            { value: 'glyph', label: 'Glyphs only' },
+            { value: 'relief', label: 'Relief + glyphs' },
+            { value: 'hypso', label: 'Hypsometric tint' },
+            { value: 'stack', label: 'Full stack' },
+          ]}
+          onChange={(v) => setTweak('channel', v)} />
+        <TweakToggle label="Coastline emphasis" value={t.coast}
+          onChange={(v) => setTweak('coast', v)} />
+        <TweakSlider label="Glyph density" min={0} max={100} step={1} value={t.density}
+          unit={t.density < 25 ? ' · sparse' : t.density > 78 ? ' · dense' : ' · balanced'}
+          onChange={(v) => setTweak('density', v)} />
+        <TweakSection label="The winds of magic" />
+        <TweakRadio label="Visibility" value={t.magic}
+          options={[
+            { value: 'off', label: 'Hidden' },
+            { value: 'nodes', label: 'Wells' },
+            { value: 'wash', label: 'Winds' },
+          ]}
+          onChange={(v) => setTweak('magic', v)} />
+      </TweaksPanel>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<AtlasTweaks />);
+</script>
+
+</body>
+</html>

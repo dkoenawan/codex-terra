@@ -1,0 +1,63 @@
+---
+import CornerOrnament from "./CornerOrnament.astro";
+import { withBase } from "../lib/url";
+---
+
+<div id="atlas-tip"><div class="tip-biome" id="atlas-tip-biome"></div><div id="atlas-tip-coords"></div><div id="atlas-tip-mana"></div></div>
+
+<div class="atlas-controls">
+  <div class="ctrl-group">
+    <label class="ctrl-label" for="ctl-seed">Seed</label>
+    <input class="ctrl-input" id="ctl-seed" type="number" min="1" max="999999" value="73" />
+  </div>
+  <div class="ctrl-sep"></div>
+  <div class="ctrl-group">
+    <label class="ctrl-label" for="ctl-channel">Channel</label>
+    <select class="ctrl-select" id="ctl-channel">
+      <option value="glyph">Glyphs</option>
+      <option value="relief">Relief</option>
+      <option value="hypso">Hypsometric</option>
+      <option value="stack">Full Stack</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <label class="ctrl-label" for="ctl-magic">Magic</label>
+    <select class="ctrl-select" id="ctl-magic">
+      <option value="nodes" selected>Wells</option>
+      <option value="wash">Winds</option>
+      <option value="off">Hidden</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <label class="ctrl-label" for="ctl-density">Density</label>
+    <input class="ctrl-range" id="ctl-density" type="range" min="0" max="100" value="59" />
+    <span id="ctl-density-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-ink);min-width:28px">59</span>
+  </div>
+  <div class="ctrl-group">
+    <label class="ctrl-label" for="ctl-coast">Coast</label>
+    <input class="ctrl-checkbox" id="ctl-coast" type="checkbox" checked />
+  </div>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn ctrl-btn-ghost" id="btn-roll">⚄ Roll</button>
+  <button class="ctrl-btn" id="btn-generate">Generate</button>
+</div>
+
+<div class="vellum panel atlas-wrap" style="position:relative">
+  <CornerOrnament corners={["tl", "tr"]} />
+  <div class="living-hd">
+    <span class="lt" id="atlas-seed-label">Terra · seed 73</span>
+    <span class="cur" id="atlas-cur">channel: glyphs · magic: wells</span>
+  </div>
+  <div id="atlas-plate"></div>
+</div>
+<p class="atlas-hint">Hover any hex to read its biome, mana strength, and grid coordinates.</p>
+
+<!-- Engine globals — loaded before the island script -->
+<script src={withBase("/atlas/atlas-core.js")} is:inline></script>
+<script src={withBase("/atlas/atlas-glyphs.js")} is:inline></script>
+<script src={withBase("/atlas/atlas-render.js")} is:inline></script>
+
+<script>
+  import { mountAtlasMap } from "../scripts/atlas-map";
+  mountAtlasMap();
+</script>

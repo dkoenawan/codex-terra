@@ -27,8 +27,8 @@ export const DOMAINS: Book[] = [
     blurb:
       "The lands of the world — its realms, cities, and wilds — drawn by a living map that the cartographer's engine conjures anew.",
     status: "soon",
-    href: "#books",
-    footStatus: "Next ✦ map engine",
+    href: "/terrae",
+    footStatus: "✦ In progress",
     crest: `<path d="M9,40 Q21,28 32,40 T55,40"/><path d="M9,48 Q21,36 32,48 T55,48"/><circle cx="32" cy="18" r="7"/><path d="M32,11 L32,4 M32,25 L32,30" opacity=".6"/>`,
   },
   {

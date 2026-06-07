@@ -1,0 +1,242 @@
+/* ── Liber II · Terrae — page-local styles ── */
+
+/* hero */
+.terrae-hero {
+  position: relative;
+  text-align: center;
+  padding: 140px 20px 72px;
+  min-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.terrae-hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--f-display);
+  font-size: 12px;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.terrae-hero .eyebrow::before,
+.terrae-hero .eyebrow::after {
+  content: "";
+  width: 42px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.terrae-hero h1 {
+  font-size: clamp(40px, 6.4vw, 76px);
+  color: var(--parchment);
+  letter-spacing: .04em;
+  line-height: 1.02;
+  margin-bottom: 18px;
+}
+.terrae-hero .amp {
+  display: block;
+  font-size: .52em;
+  opacity: .7;
+  letter-spacing: .06em;
+}
+.terrae-hero .tagline {
+  font-family: var(--f-script);
+  font-style: italic;
+  font-size: clamp(18px, 2.2vw, 24px);
+  color: var(--parchment);
+  opacity: .74;
+  max-width: 620px;
+  margin: 0 auto 28px;
+}
+.terrae-hero .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 30px;
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--parchment);
+  opacity: .55;
+  letter-spacing: .02em;
+}
+.terrae-hero .meta b { color: var(--gold); font-weight: 500; }
+
+/* crest ring (reuses HeroSigil-style animation for the terrae crest) */
+.terrae-crest {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 24px;
+}
+.terrae-crest svg {
+  width: 100%;
+  height: 100%;
+  animation: spin-slow 90s linear infinite;
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+/* atlas island */
+.atlas-wrap {
+  position: relative;
+  padding: 22px 24px;
+}
+
+.atlas-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 20px;
+  padding: 14px 18px;
+  background: var(--parchment);
+  background-image: radial-gradient(ellipse at 30% 50%, rgba(255,245,220,.4) 0%, transparent 70%);
+  box-shadow: var(--shadow-tight);
+  border-radius: var(--r-sm);
+  margin-bottom: 18px;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ctrl-label {
+  font-family: var(--f-display);
+  font-size: 10px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  white-space: nowrap;
+}
+.ctrl-input {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--parchment-shadow);
+  color: var(--ink);
+  padding: 3px 6px;
+  width: 72px;
+  text-align: center;
+  outline: none;
+  transition: border-color .2s;
+}
+.ctrl-input:focus { border-color: var(--accent); }
+.ctrl-select {
+  font-family: var(--f-display);
+  font-size: 10px;
+  letter-spacing: .1em;
+  background: transparent;
+  border: 1px solid var(--parchment-shadow);
+  color: var(--ink);
+  padding: 5px 22px 5px 10px;
+  border-radius: var(--r-sm);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238e7338'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+.ctrl-range {
+  accent-color: var(--accent);
+  width: 90px;
+  cursor: pointer;
+}
+.ctrl-checkbox {
+  accent-color: var(--accent);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.ctrl-sep {
+  width: 1px;
+  height: 26px;
+  background: var(--parchment-shadow);
+  opacity: .4;
+  align-self: center;
+}
+.ctrl-btn {
+  font-family: var(--f-display);
+  font-size: 10px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.ctrl-btn:hover { background: var(--accent-bright); transform: translateY(-1px); }
+.ctrl-btn:active { transform: translateY(0); }
+.ctrl-btn-ghost {
+  background: transparent;
+  color: var(--accent-ink);
+  border: 1px solid var(--parchment-shadow);
+}
+.ctrl-btn-ghost:hover { background: rgba(63,138,122,.08); color: var(--accent); }
+
+/* living-hd inside the map panel */
+.living-hd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.living-hd .lt {
+  font-family: var(--f-display);
+  font-size: 15px;
+  letter-spacing: .05em;
+  color: var(--ink);
+}
+.living-hd .cur {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--accent-ink);
+  letter-spacing: .04em;
+}
+
+/* atlas svg */
+.atlas-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+  box-shadow: 0 10px 30px -18px rgba(0,0,0,.6);
+}
+
+/* hex tooltip */
+#atlas-tip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  background: rgba(7, 16, 30, .92);
+  border: 1px solid var(--navy-line);
+  border-radius: var(--r-sm);
+  padding: 8px 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--parchment);
+  line-height: 1.55;
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity .15s;
+  min-width: 140px;
+}
+#atlas-tip.visible { opacity: 1; }
+#atlas-tip .tip-biome { color: var(--gold); font-weight: 500; margin-bottom: 2px; }
+
+/* hint text */
+.atlas-hint {
+  font-family: var(--f-script);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--parchment);
+  opacity: .55;
+  text-align: center;
+  margin-top: 14px;
+}
